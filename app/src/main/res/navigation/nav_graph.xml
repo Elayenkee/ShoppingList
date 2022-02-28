@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.start.fragment.StartFragment"
+        android:label="StartFragment"
+        tools:layout="@layout/fragment_start">
+
+        <action
+            android:id="@+id/action_start_to_home"
+            app:destination="@id/homeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_to_product_create"
+            app:destination="@id/productCreateFragment" />
+
+        <action
+            android:id="@+id/action_home_to_product_all"
+            app:destination="@id/productAllFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductFragment"
+        android:label="ProductFragment"
+        tools:layout="@layout/fragment_product">
+
+        <argument
+            android:name="product"
+            app:argType="fr.alemanflorian.shoppinglist.domain.entity.Product"
+            app:nullable="false" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/productCreateFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductCreateFragment"
+        android:label="ProductCreateFragment"
+        tools:layout="@layout/fragment_product_create">
+
+        <action
+            android:id="@+id/action_product_create_to_home"
+            app:destination="@id/homeFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/productAllFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductAllFragment"
+        android:label="ProductAllFragment"
+        tools:layout="@layout/fragment_product_all">
+
+        <action
+            android:id="@+id/action_product_all_to_product"
+            app:destination="@id/productFragment" />
+
+    </fragment>
+
+</navigation>
