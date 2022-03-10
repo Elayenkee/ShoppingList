@@ -1,6 +1,6 @@
 package fr.alemanflorian.shoppinglist.domain.entity
 
-class ProductFromListe(val product: Product, var nb : Int, var ok:Int){
+class ProductFromListe(val product: Product, var nb : Int, var count:Int){
 
     companion object{
         fun create(product: Product):ProductFromListe{

@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
+import android.view.animation.Transformation
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     lateinit var header: Header
@@ -22,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
 class Header(val view : View){
     val container = view.findViewById<ViewGroup>(R.id.header_container)
+    var initialHeight:Float = 60.toPx
 
     fun reset(){
         show()
@@ -30,13 +36,15 @@ class Header(val view : View){
     }
 
     fun show(){
-        //view.visibility = View.VISIBLE
-        translate(0f)
+        view.visibility = View.VISIBLE
+        //translate(0f)
+        //collapse(false)
     }
 
     fun hide(){
-        //view.visibility = View.GONE
-        translate(-120f)
+        view.visibility = View.GONE
+        //translate(-120f)
+        //collapse(true)
     }
 
     fun setTitle(title: String){
@@ -50,16 +58,57 @@ class Header(val view : View){
         return v
     }
 
-    private fun translate(translationYTo : Float)
+    /*private fun translate(translationYTo : Float)
     {
-        val valueAnimator = ValueAnimator.ofFloat(view?.translationY, translationYTo.toPx).apply {
+        val valueAnimator = ValueAnimator.ofFloat(view.translationY, translationYTo.toPx).apply {
             interpolator = LinearInterpolator()
             duration = 300
         }
         valueAnimator.addUpdateListener {
             val value = it.animatedValue as Float
-            view?.translationY = value
+            view.translationY = value
         }
         valueAnimator.start()
+    }*/
+
+    private fun collapse(b:Boolean) {
+        val h = view.measuredHeight
+        val a: Animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                if(b)
+                {
+                    if (interpolatedTime == 1f)
+                    {
+                        view.visibility = View.GONE
+                    }
+                    else
+                    {
+                        view.layoutParams.height = h - (h * interpolatedTime).toInt()
+                        view.requestLayout()
+                        System.err.println(">> " + view.layoutParams.height)
+                    }
+                }
+                else
+                {
+                    if (interpolatedTime == 0f)
+                    {
+                        view.visibility = View.VISIBLE
+                    }
+                    else
+                    {
+                        view.layoutParams.height = h + ((initialHeight - h)* interpolatedTime).toInt()
+                        view.requestLayout()
+                    }
+                }
+            }
+
+            override fun willChangeBounds(): Boolean {
+                return true
+            }
+        }
+
+        // Collapse speed of 1dp/ms
+        a.setDuration(150);//(initialHeight / v.context.resources.displayMetrics.density).toLong())
+        view.startAnimation(a)
     }
 }

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
-import kotlinx.android.synthetic.main.item_liste.view.*
+import kotlinx.android.synthetic.main.fragment_listes_item_liste.view.*
 
 class ChangeListeAdapter(private val interactor: Interactor) : RecyclerView.Adapter<ChangeListeAdapter.ListeViewHolder>()
 {
@@ -32,7 +32,7 @@ class ChangeListeAdapter(private val interactor: Interactor) : RecyclerView.Adap
 
     override fun getItemCount() = listes.size
 
-    class ListeViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val interactor: Interactor) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_liste, parent, false))
+    class ListeViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val interactor: Interactor) : RecyclerView.ViewHolder(inflater.inflate(R.layout.fragment_listes_item_liste, parent, false))
     {
         private var data: Liste? = null
 

@@ -14,7 +14,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:textColor="@color/black"
+            android:textColor="#000"
             android:textSize="20sp"
             android:text="Produit"/>
 

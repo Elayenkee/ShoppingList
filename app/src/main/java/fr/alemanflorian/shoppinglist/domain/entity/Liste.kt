@@ -23,7 +23,7 @@ data class Liste(var id: Long, var name: String, val products: LinkedHashMap<Lon
         if(products.containsKey(product.id) && products[product.id] != null)
         {
             val p = products.get(product.id)!!
-            products[product.id] = Pair(p.first + 1, p.second)
+            products[product.id] = Pair(p.first + 1, 0)
         }
         else
             products.put(product.id, Pair(1, 0))
@@ -36,11 +36,19 @@ data class Liste(var id: Long, var name: String, val products: LinkedHashMap<Lon
         if(products.containsKey(product.id) && products[product.id] != null)
         {
             val p = products.get(product.id)!!
-            products[product.id] =  Pair(p.first - 1, p.second)
+            products[product.id] =  Pair(p.first - 1, 0)
         }
 
         if(products[product.id]!!.first == 0)
             deleteProduct(product)
+    }
+
+    fun onClickProduct(product: Product){
+        if(product.id <= 0 || !products.containsKey(product.id) || products[product.id] == null)
+            return
+
+        val p = products.get(product.id)!!
+        products[product.id] = Pair(p.first, 1 - p.second)
     }
 
     fun deleteProduct(product: Product){
@@ -53,6 +61,26 @@ data class Liste(var id: Long, var name: String, val products: LinkedHashMap<Lon
         if(products.containsKey(product.id))
             return products.get(product.id)!!.first
         return 0
+    }
+
+    fun getCountOfProduct(product: Product):Int{
+        if(products.containsKey(product.id))
+            return products.get(product.id)!!.second
+        return 0
+    }
+
+    fun isFinished():Boolean{
+        for(p in products.values)
+        {
+            if(p.second == 0)
+                return false
+        }
+        return true
+    }
+
+    fun finish(){
+        for(p in products)
+            products[p.key] = Pair(p.value.first, 0)
     }
 
     companion object

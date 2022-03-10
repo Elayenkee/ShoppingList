@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/startFragment">
 
+    <!-- START -->
     <fragment
         android:id="@+id/startFragment"
         android:name="fr.alemanflorian.shoppinglist.presentation.start.fragment.StartFragment"
@@ -15,8 +16,13 @@
             android:id="@+id/action_start_to_home"
             app:destination="@id/homeFragment" />
 
+        <action
+            android:id="@+id/action_start_to_shopping"
+            app:destination="@id/ShoppingFragment" />
+
     </fragment>
 
+    <!-- HOME -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragment"
@@ -24,15 +30,16 @@
         tools:layout="@layout/fragment_home">
 
         <action
-            android:id="@+id/action_home_to_product_create"
-            app:destination="@id/productCreateFragment" />
+            android:id="@+id/action_home_to_shopping"
+            app:destination="@id/ShoppingFragment" />
 
         <action
-            android:id="@+id/action_home_to_product_all"
-            app:destination="@id/productAllFragment" />
+            android:id="@+id/action_home_to_listes"
+            app:destination="@id/ListesFragment" />
 
     </fragment>
 
+    <!-- PRODUCT -->
     <fragment
         android:id="@+id/productFragment"
         android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductFragment"
@@ -46,6 +53,7 @@
 
     </fragment>
 
+    <!-- CREATE PRODUCT -->
     <fragment
         android:id="@+id/productCreateFragment"
         android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductCreateFragment"
@@ -58,15 +66,35 @@
 
     </fragment>
 
+    <!-- SHOPPING -->
     <fragment
-        android:id="@+id/productAllFragment"
-        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductAllFragment"
-        android:label="ProductAllFragment"
-        tools:layout="@layout/fragment_product_all">
+        android:id="@+id/ShoppingFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.shopping.fragment.ShoppingFragment"
+        android:label="ShoppingFragment"
+        tools:layout="@layout/fragment_shopping">
+
+
+    </fragment>
+
+    <!-- LISTES -->
+    <fragment
+        android:id="@+id/ListesFragment"
+        android:name="fr.alemanflorian.shoppinglist.presentation.listes.fragment.ListesFragment"
+        android:label="ListesFragment"
+        tools:layout="@layout/fragment_listes">
 
         <action
-            android:id="@+id/action_product_all_to_product"
+            android:id="@+id/action_listes_to_product"
             app:destination="@id/productFragment" />
+
+        <action
+            android:id="@+id/action_listes_to_shopping"
+            app:destination="@id/ShoppingFragment" />
+
+        <argument
+            android:name="firstTime"
+            app:argType="boolean"
+            app:nullable="false" />
 
     </fragment>
 

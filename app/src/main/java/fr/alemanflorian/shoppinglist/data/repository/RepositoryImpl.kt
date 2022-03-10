@@ -92,7 +92,7 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
         return listeDao.find(id)?.toModel()
     }
 
-    override fun getAllListes(): List<Liste> {
+    override suspend fun getAllListes(): List<Liste> {
         return listeDao.getAll().map { it.toModel() }
     }
 
@@ -105,7 +105,7 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
             val newCurrentListe = listeDao.findFirstListe()
             if(newCurrentListe != null)
             {
-                saveCurrentListe(newCurrentListe!!.toModel())
+                saveCurrentListe(newCurrentListe.toModel())
             }
             else
             {
@@ -135,6 +135,7 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
                 cachedCurrentListe = Liste(0, "Ma liste", LinkedHashMap())
                 saveListe(cachedCurrentListe!!)
                 saveCurrentListe(cachedCurrentListe!!)
+                setListeEnCours(cachedCurrentListe!!)
             }
         }
         return cachedCurrentListe
@@ -151,8 +152,40 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
         sharedPrefs.edit().putLong(CURRENT_LISTE_ID, liste.id).apply()
     }
 
+    override suspend fun hasListeEnCours():Boolean{
+        return getListeEnCours() != null
+    }
+
+    override suspend fun getListeEnCours(): Liste? {
+        val listeID = sharedPrefs.getLong(LISTE_ENCOURS_ID, -1)
+        var liste: Liste? = null
+        if(listeID > 0)
+        {
+            liste = getListe(listeID)
+            if(liste != null && liste.products.isEmpty())
+                liste = null
+        }
+        return liste
+    }
+
+    override suspend fun finishListeEnCours() {
+        val liste = getListeEnCours()
+        if(liste != null)
+        {
+            liste.finish()
+            saveListe(liste)
+            sharedPrefs.edit().putLong(LISTE_ENCOURS_ID, -1).apply()
+        }
+    }
+
+    override fun setListeEnCours(liste: Liste) {
+        System.err.println("RepoImpl::setListeEnCours {$liste}")
+        sharedPrefs.edit().putLong(LISTE_ENCOURS_ID, liste.id).apply()
+    }
+
     companion object {
         private const val PREFERENCE_FILE_NAME = "MyListe"
         private const val CURRENT_LISTE_ID = "currentListeID"
+        private const val LISTE_ENCOURS_ID = "listeEnCoursID";
     }
 }

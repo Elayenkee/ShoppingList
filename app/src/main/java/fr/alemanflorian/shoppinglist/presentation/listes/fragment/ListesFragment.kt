@@ -1,4 +1,4 @@
-package fr.alemanflorian.shoppinglist.presentation.product.fragment
+package fr.alemanflorian.shoppinglist.presentation.listes.fragment
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -16,6 +16,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
@@ -25,47 +26,51 @@ import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
 import fr.alemanflorian.shoppinglist.presentation.common.extension.hideKeyboard
+import fr.alemanflorian.shoppinglist.presentation.common.extension.launchIO
 import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
 import fr.alemanflorian.shoppinglist.presentation.common.extension.questionYesNo
-import fr.alemanflorian.shoppinglist.presentation.liste.ListeViewModel
+import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ChangeListeAdapter
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductAllAdapter
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductFilteredAdapter
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductListeAdapter
 import fr.alemanflorian.shoppinglist.presentation.product.viewmodel.ProductViewModel
-import kotlinx.android.synthetic.main.fragment_product_all.*
+import kotlinx.android.synthetic.main.fragment_listes.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProductAllFragment : CustomFragment()
+class ListesFragment : CustomFragment()
 {
     private val productViewModel : ProductViewModel by viewModel()
-    private val listeViewModel : ListeViewModel by viewModel()
+    private val listesViewModel : ListesViewModel by viewModel()
 
     private var allProducts = mutableListOf<ProductFromListe>()
 
-    private var popupChangeListe:ChangeListe? = null
+    private var popupChangeListe: ChangeListe? = null
+    //private lateinit var txtSearchProduct:TextView
+
+    private var firsTime:Boolean = false
 
     private val adapterAll = ProductAllAdapter(object : ProductAllAdapter.Interactor {
         override fun onProductClicked(product: ProductFromListe) {
             mainNavController().navigate(
-                ProductAllFragmentDirections.actionProductAllToProduct(
-                    product.product
-                )
+                    ListesFragmentDirections.actionListesToProduct(
+                            product.product
+                    )
             )
         }
 
         override fun onProductAddToCurrentList(product: ProductFromListe) {
-            listeViewModel.addProductToCurrentListe(product)
+            listesViewModel.addProductToCurrentListe(product)
         }
     })
 
     private val adapterFiltered = ProductFilteredAdapter(object :ProductFilteredAdapter.Interactor {
         override fun onProductClicked(product: ProductFromListe) {
-            listeViewModel.addProductToCurrentListe(product)
+            listesViewModel.addProductToCurrentListe(product)
             containerFiltre.visibility = View.GONE
             txtSearchProduct.hideKeyboard()
             txtSearchProduct.setText("")
@@ -74,25 +79,32 @@ class ProductAllFragment : CustomFragment()
 
     private val adapterListe = ProductListeAdapter(object : ProductListeAdapter.Interactor{
         override fun onItemDismiss(product: ProductFromListe) {
-            listeViewModel.deleteProductFromCurrentListe(product.product)
+            listesViewModel.deleteProductFromCurrentListe(product.product)
         }
 
         override fun onItemClick(product: ProductFromListe) {
-            DetailsProduct(listeViewModel, viewLifecycleOwner, product).show(requireContext())
+            DetailsProduct(listesViewModel, viewLifecycleOwner, product).show(requireContext())
         }
     })
 
     override fun onCreateView(inflater: LayoutInflater,container: ViewGroup?,savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.fragment_product_all, container, false)
+        return inflater.inflate(R.layout.fragment_listes, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+        initArguments()
         initViewObserver()
         initView()
         refresh()
+    }
+
+    private fun initArguments()
+    {
+        val arguments: ListesFragmentArgs by navArgs()
+        firsTime = arguments.firstTime
     }
 
     private fun initView()
@@ -104,6 +116,9 @@ class ProductAllFragment : CustomFragment()
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(productListeRecyclerView)
 
+        //val vHeader = header.addView(R.layout.product_all_header)
+
+        //txtSearchProduct = vHeader.findViewById(R.id.txtSearchProduct)
         txtSearchProduct.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -116,10 +131,10 @@ class ProductAllFragment : CustomFragment()
             }
         })
         txtSearchProduct.setOnClickListener { onTextChanged(txtSearchProduct.text) }
-        txtSearchProduct.setOnFocusChangeListener { _v, hasFocus ->  if(hasFocus) onTextChanged(
+        txtSearchProduct.setOnFocusChangeListener { _, hasFocus ->  if(hasFocus) onTextChanged(
             txtSearchProduct.text
         ) else containerFiltre.performClick()}
-        txtSearchProduct.setOnEditorActionListener { _v, actionId, _event ->
+        txtSearchProduct.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE)
             {
                 val name = txtSearchProduct.text.toString()
@@ -127,7 +142,7 @@ class ProductAllFragment : CustomFragment()
                 if(product != null)
                 {
                     val p = ProductFromListe.create(product)
-                    listeViewModel.addProductToCurrentListe(p)
+                    listesViewModel.addProductToCurrentListe(p)
                     containerFiltre.visibility = View.GONE
                     txtSearchProduct.hideKeyboard()
                     txtSearchProduct.setText("")
@@ -162,10 +177,30 @@ class ProductAllFragment : CustomFragment()
             drawer.openDrawer(Gravity.RIGHT)
         }
 
-        header.addView(R.layout.button_change_liste).setOnClickListener {
+        /*vHeader.findViewById<View>(R.id.productAllHeaderBtnChangeList).setOnClickListener {
             hideKeyboard()
             popupChangeListe = ChangeListe(listeViewModel, viewLifecycleOwner)
             popupChangeListe!!.show(requireContext())
+        }*/
+        header.addView(R.layout.button_change_liste).setOnClickListener {
+            hideKeyboard()
+            popupChangeListe = ChangeListe(listesViewModel, viewLifecycleOwner)
+            popupChangeListe!!.show(requireContext())
+        }
+
+        if(firsTime || true)
+        {
+            fragmentListesBtnGoShopping.visibility = View.VISIBLE
+            fragmentListesBtnGoShopping.isEnabled = false
+            fragmentListesBtnGoShopping.setOnClickListener {
+                GlobalScope.launch(Dispatchers.IO) {
+                    listesViewModel.setCurrentListeAsListeEnCours()
+                    withContext(Dispatchers.Main)
+                    {
+                        mainNavController().navigate(ListesFragmentDirections.actionListesToShopping())
+                    }
+                }
+            }
         }
     }
 
@@ -202,8 +237,8 @@ class ProductAllFragment : CustomFragment()
     private fun refresh() {
         System.err.println("refresh")
         productViewModel.getAllProductsWithCurrentNb()
-        listeViewModel.getProductsOfCurrentListe()
-        listeViewModel.getCurrentListe()
+        listesViewModel.getProductsOfCurrentListe()
+        listesViewModel.getCurrentListe()
     }
 
     private fun initViewObserver() {
@@ -227,75 +262,79 @@ class ProductAllFragment : CustomFragment()
             }
         }
 
-        listeViewModel.addProductResult.observe(viewLifecycleOwner){
+        listesViewModel.addProductResult.observe(viewLifecycleOwner){
             System.err.println("on addProductResult")
             if(it is Resource.Success)
                 refresh()
         }
 
-        listeViewModel.decrementeProductResult.observe(viewLifecycleOwner){
+        listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
             System.err.println("on decrementeProductResult")
             if(it is Resource.Success)
                 refresh()
         }
 
-        listeViewModel.getProductsOfCurrentListeResult.observe(viewLifecycleOwner){
+        listesViewModel.getProductsOfCurrentListeResult.observe(viewLifecycleOwner){
             System.err.println("on getProductsOfCurrentListeResult")
             if(it is Resource.Success)
             {
                 adapterListe.setData(it.data)
                 layoutEmpty.visibility = if(it.data.size > 0) View.GONE else View.VISIBLE
-                productListeRecyclerView.visibility = if(it.data.size > 0) View.VISIBLE else View.GONE
+                productListeRecyclerView.visibility = if(it.data.size > 0) View.VISIBLE else View.INVISIBLE
+                fragmentListesBtnGoShopping.isEnabled = it.data.size > 0
+                fragmentListesBtnGoShopping.alpha = if (it.data.size > 0) 1f else .4f
             }
         }
 
-        listeViewModel.getCurrentListeResult.observe(viewLifecycleOwner){
+        listesViewModel.getCurrentListeResult.observe(viewLifecycleOwner){
             System.err.println("on getCurrentListeResult")
             if(it is Resource.Success)
+            {
                 header.setTitle(it.data.name)
+            }
         }
 
-        listeViewModel.deleteListeResult.observe(viewLifecycleOwner){
+        listesViewModel.deleteListeResult.observe(viewLifecycleOwner){
             System.err.println("on deleteListeResult")
             if(it is Resource.Success)
             {
-                listeViewModel.getCurrentListe()
-                listeViewModel.getProductsOfCurrentListe()
+                listesViewModel.getCurrentListe()
+                listesViewModel.getProductsOfCurrentListe()
             }
         }
 
-        listeViewModel.saveCurrentListeResult.observe(viewLifecycleOwner){
+        listesViewModel.saveCurrentListeResult.observe(viewLifecycleOwner){
             System.err.println("on saveCurrentListeResult")
             if(it is Resource.Success)
             {
-                listeViewModel.getCurrentListe()
-                listeViewModel.getProductsOfCurrentListe()
+                listesViewModel.getCurrentListe()
+                listesViewModel.getProductsOfCurrentListe()
             }
         }
 
-        listeViewModel.deleteProductFromCurrentListeResult.observe(viewLifecycleOwner){
+        listesViewModel.deleteProductFromCurrentListeResult.observe(viewLifecycleOwner){
             System.err.println("on deleteProductFromCurrentListeResult")
         }
 
-        listeViewModel.saveNewListeResult.observe(viewLifecycleOwner){
+        listesViewModel.saveNewListeResult.observe(viewLifecycleOwner){
             System.err.println("on saveNewListeResult")
             if(it is Resource.Success)
             {
-                listeViewModel.getCurrentListe()
-                listeViewModel.getProductsOfCurrentListe()
+                listesViewModel.getCurrentListe()
+                listesViewModel.getProductsOfCurrentListe()
                 popupChangeListe?.dismiss()
                 popupChangeListe = null
             }
         }
     }
     
-    class ChangeListe(val listeViewModel : ListeViewModel, val viewLifecycleOwner: LifecycleOwner){
+    class ChangeListe(val listesViewModel : ListesViewModel, val viewLifecycleOwner: LifecycleOwner){
         private lateinit var context: Context
         private lateinit var dialog: Dialog
         private val adapterListe = ChangeListeAdapter(object : ChangeListeAdapter.Interactor{
             override fun onClicked(liste: Liste)
             {
-                listeViewModel.saveCurrentListe(liste)
+                listesViewModel.saveCurrentListe(liste)
                 dialog.dismiss()
             }
 
@@ -304,10 +343,10 @@ class ProductAllFragment : CustomFragment()
                 System.err.println("Delete " + liste.name)
                 val builder = AlertDialog.Builder(context)
                 builder.setMessage("Supprimer cette liste ?")
-                builder.setPositiveButton(android.R.string.ok) { _dialog, _which ->
-                    listeViewModel.deleteListe(liste)
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+                    listesViewModel.deleteListe(liste)
                 }
-                builder.setNegativeButton(android.R.string.cancel) { _dialog, _which -> }
+                builder.setNegativeButton(android.R.string.cancel) { _, _ -> }
                 builder.show()
             }
         })
@@ -322,16 +361,16 @@ class ProductAllFragment : CustomFragment()
             dialog.show()
 
             dialog.findViewById<RecyclerView>(R.id.popupChangeListeRecyclerView).adapter = adapterListe
-            listeViewModel.getAllListeResult.observe(viewLifecycleOwner){
+            listesViewModel.getAllListeResult.observe(viewLifecycleOwner){
                 if (it is Resource.Success)
                 {
                     adapterListe.setData(it.data)
                 }
             }
-            listeViewModel.getAllListe()
+            listesViewModel.getAllListe()
 
-            listeViewModel.deleteListeResult.observe(viewLifecycleOwner){
-                listeViewModel.getAllListe()
+            listesViewModel.deleteListeResult.observe(viewLifecycleOwner){
+                listesViewModel.getAllListe()
             }
 
             val txtListe = dialog.findViewById<TextView>(R.id.popupChangeListeTxtListe)
@@ -339,11 +378,11 @@ class ProductAllFragment : CustomFragment()
                 if(txtListe.text.toString().length > 0)
                 {
                     val newListe = Liste(0, txtListe.text.toString(), LinkedHashMap())
-                    listeViewModel.saveNewListe(newListe)
+                    listesViewModel.saveNewListe(newListe)
                     txtListe.text = ""
                 }
             }
-            txtListe.setOnEditorActionListener { _v, actionId, event ->
+            txtListe.setOnEditorActionListener { _, actionId, _ ->
                 if(actionId == EditorInfo.IME_ACTION_DONE)
                 {
                     createNewListe()
@@ -374,7 +413,7 @@ class ProductAllFragment : CustomFragment()
         }
     }
 
-    class DetailsProduct(val listeViewModel: ListeViewModel, val viewLifecycleOwner: LifecycleOwner, val product:ProductFromListe){
+    class DetailsProduct(val listesViewModel: ListesViewModel, val viewLifecycleOwner: LifecycleOwner, val product:ProductFromListe){
         private lateinit var context: Context
         private lateinit var dialog: Dialog
 
@@ -388,20 +427,20 @@ class ProductAllFragment : CustomFragment()
 
             update()
             dialog.findViewById<View>(R.id.popupDetailsItemMinus).setOnClickListener {
-                listeViewModel.decrementeProductToCurrentListe(product)
+                listesViewModel.decrementeProductToCurrentListe(product)
             }
             dialog.findViewById<View>(R.id.popupDetailsItemPlus).setOnClickListener {
-                listeViewModel.addProductToCurrentListe(product)
+                listesViewModel.addProductToCurrentListe(product)
             }
 
             dialog.setOnDismissListener {
-                listeViewModel.getProductsOfCurrentListe()
+                listesViewModel.getProductsOfCurrentListe()
             }
 
-            listeViewModel.addProductResult.observe(viewLifecycleOwner){
+            listesViewModel.addProductResult.observe(viewLifecycleOwner){
                 update()
             }
-            listeViewModel.decrementeProductResult.observe(viewLifecycleOwner){
+            listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
                 update()
             }
         }

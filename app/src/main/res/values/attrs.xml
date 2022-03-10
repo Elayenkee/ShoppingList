@@ -1,0 +1,9 @@
+<resources>
+
+	<declare-styleable name="FragmentHomeButton">
+		<attr name="imageSrc" format="reference"/>
+        <attr name="backgroundColor" format="color"/>
+        <attr name="text" format="string"/>
+	</declare-styleable>
+
+</resources>

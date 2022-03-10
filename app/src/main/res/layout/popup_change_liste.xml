@@ -15,7 +15,7 @@
         android:padding="30dp"
         android:orientation="vertical">
 
-        <view class="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductAllFragment$ChangeListe$PopupChangeListeRecyclerViewLayout"
+        <view class="fr.alemanflorian.shoppinglist.presentation.listes.fragment.ListesFragment$ChangeListe$PopupChangeListeRecyclerViewLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp">

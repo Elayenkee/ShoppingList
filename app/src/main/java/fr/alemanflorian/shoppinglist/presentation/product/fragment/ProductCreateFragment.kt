@@ -30,7 +30,7 @@ class ProductCreateFragment : CustomFragment()
     {
         super.onViewCreated(view, savedInstanceState)
         initViewObserver()
-        productCreateTxtName.setOnEditorActionListener { v, actionId, event ->
+        productCreateTxtName.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE)
             {
                 saveProduct()

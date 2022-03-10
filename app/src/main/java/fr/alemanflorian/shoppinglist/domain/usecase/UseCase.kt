@@ -2,10 +2,13 @@ package fr.alemanflorian.shoppinglist.domain.usecase
 
 import android.content.res.Resources
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
+import fr.alemanflorian.shoppinglist.domain.entity.ListeEnCours
 import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.repository.Repository
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
+import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
+import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel.InitListeEnCoursResult
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
@@ -13,6 +16,27 @@ class UseCase (private val repository: Repository){
 
     fun onStart(){
         repository.onStart()
+    }
+
+    suspend fun hasListes():Boolean{
+        return !repository.getAllListes().isEmpty()
+    }
+
+    suspend fun hasListeEnCours():Boolean{
+        return repository.hasListeEnCours()
+    }
+
+    suspend fun finishListeEnCours(){
+        repository.finishListeEnCours()
+    }
+
+    fun setListeEnCours(liste: Liste){
+        repository.setListeEnCours(liste)
+    }
+
+    suspend fun setCurrentListeAsListeEnCours(){
+        val currentListe = repository.getCurrentListe()
+        repository.setListeEnCours(currentListe)
     }
 
     fun getProduct(id:Long) = flow<Resource<Product>>{
@@ -48,7 +72,7 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun saveProduct(product: Product) = flow<Resource<Product>> {
+    fun saveProduct(product: Product) = flow{
         emit(Resource.loading())
         repository.saveProduct(product)
         emit(Resource.success(product))
@@ -63,7 +87,7 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun addProductToCurrentListe(product: ProductFromListe) = flow<Resource<ProductFromListe>> {
+    fun addProductToCurrentListe(product: ProductFromListe) = flow{
         emit(Resource.loading())
         addToCurrentListe(product)
         emit(Resource.success(product))
@@ -78,7 +102,7 @@ class UseCase (private val repository: Repository){
         product.nb++
     }
 
-    fun decrementeProductToCurrentListe(product: ProductFromListe) = flow<Resource<Liste>> {
+    fun decrementeProductToCurrentListe(product: ProductFromListe) = flow{
         emit(Resource.loading())
         val currentListe = repository.getCurrentListe()
         currentListe.decrementeProduct(product.product)
@@ -89,7 +113,7 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun deleteProductFromCurrentListe(product: Product) = flow<Resource<Liste>> {
+    fun deleteProductFromCurrentListe(product: Product) = flow{
         emit(Resource.loading())
         val currentListe = repository.getCurrentListe();
         currentListe.deleteProduct(product)
@@ -99,14 +123,15 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun getCurrentListe() = flow<Resource<Liste>> {
+    fun getCurrentListe() = flow{
         emit(Resource.loading())
-        emit(Resource.success(repository.getCurrentListe()))
+        val liste = repository.getCurrentListe()
+        emit(Resource.success(liste))
     }.catch {
         emit(Resource.failure(it))
     }
 
-    fun saveCurrentListe(liste:Liste) = flow<Resource<Liste>> {
+    fun saveCurrentListe(liste:Liste) = flow{
         emit(Resource.loading())
         repository.saveCurrentListe(liste)
         emit(Resource.success(liste))
@@ -114,7 +139,7 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun saveNewListe(liste:Liste) = flow<Resource<Liste>> {
+    fun saveNewListe(liste:Liste) = flow{
         emit(Resource.loading())
         repository.saveListe(liste)
         repository.saveCurrentListe(liste)
@@ -148,7 +173,7 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun deleteListe(liste: Liste) = flow<Resource<Long>>{
+    fun deleteListe(liste: Liste) = flow{
         emit(Resource.loading())
         repository.deleteListe(liste)
         emit(Resource.success(liste.id))
@@ -156,11 +181,57 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun saveProductAndAddToCurrentListe(product: Product) = flow<Resource<Product>> {
+    fun saveProductAndAddToCurrentListe(product: Product) = flow{
         emit(Resource.loading())
         repository.saveProduct(product)
         addToCurrentListe(ProductFromListe.create(product))
         emit(Resource.success(product))
+    }.catch {
+        emit(Resource.failure(it))
+    }
+
+    fun getListeEnCours() = flow{
+        emit(Resource.loading())
+        emit(Resource.success(repository.getListeEnCours()))
+    }.catch {
+        emit(Resource.failure(it))
+    }
+
+    fun initListeEnCours() = flow<Resource<InitListeEnCoursResult>>{
+        emit(Resource.loading())
+        var liste:Liste? = repository.getListeEnCours()
+        if(liste == null)
+        {
+            val listes = repository.getAllListes()
+            if(listes.size == 1)
+            {
+                liste = listes[0]
+                repository.setListeEnCours(liste)
+            }
+        }
+
+        if(liste != null)
+        {
+            val result = ListeEnCours.create(liste, repository)
+            emit(Resource.success(InitListeEnCoursResult(result, ArrayList())))
+        }
+        else
+        {
+            emit(Resource.success(InitListeEnCoursResult(null, repository.getAllListes())))
+        }
+    }.catch {
+        emit(Resource.failure(it))
+    }
+
+    fun clickProductEnCours(product: ProductFromListe) = flow<Resource<ShoppingViewModel.ClickProductResult>>{
+        emit(Resource.loading())
+        val listeEnCours = repository.getListeEnCours()!!
+        listeEnCours.onClickProduct(product.product)
+        repository.saveListe(listeEnCours)
+        product.count = listeEnCours.getCountOfProduct(product.product)
+        val isFinished = listeEnCours.isFinished()
+        emit(Resource.success(ShoppingViewModel.ClickProductResult(product, isFinished)))
+
     }.catch {
         emit(Resource.failure(it))
     }

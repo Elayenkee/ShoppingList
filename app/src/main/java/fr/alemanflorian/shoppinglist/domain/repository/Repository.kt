@@ -17,9 +17,14 @@ interface Repository
     fun getCachedListe(id:Long):Liste?
     suspend fun saveListe(liste:Liste)
     fun getListe(id:Long):Liste?
-    fun getAllListes():List<Liste>
+    suspend fun getAllListes():List<Liste>
     suspend fun deleteListe(liste: Liste)
 
     suspend fun getCurrentListe():Liste
     fun saveCurrentListe(liste:Liste)
+
+    suspend fun hasListeEnCours():Boolean
+    suspend fun getListeEnCours():Liste?
+    suspend fun finishListeEnCours()
+    fun setListeEnCours(liste:Liste)
 }

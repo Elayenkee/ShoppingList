@@ -1,52 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/homeBtnCreateListe"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="Faire une liste"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/homeBtnCreateProduct"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/homeBtnCreateProduct"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="Créer un produit"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/homeBtnAllProduct"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeBtnCreateListe"
-        app:layout_constraintVertical_chainStyle="packed"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".2" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/homeBtnAllProduct"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="Tous les produits"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeBtnCreateProduct" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".8" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".05" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middleV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".5" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middleH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".5" />
+
+        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+            android:id="@+id/homeBtnToShopping"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="@id/top"
+            app:layout_constraintEnd_toEndOf="@id/middleV"
+            app:layout_constraintStart_toStartOf="@id/left"
+            app:layout_constraintBottom_toBottomOf="@id/middleH"
+            app:imageSrc="@drawable/go_shopping"
+            app:backgroundColor="#43ff9e"
+            app:text="Partir faire les courses"
+            android:padding="10dp"/>
+
+        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+            android:id="@+id/homeBtnAllProducts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="@id/top"
+            app:layout_constraintEnd_toEndOf="@id/right"
+            app:layout_constraintStart_toStartOf="@id/middleV"
+            app:layout_constraintBottom_toBottomOf="@id/middleH"
+            app:imageSrc="@drawable/groceries"
+            app:backgroundColor="#ff6d60"
+            app:text="Tous les produits"
+            android:padding="10dp"/>
+
+        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+            android:id="@+id/homeBtnToListes"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="@id/middleH"
+            app:layout_constraintEnd_toEndOf="@id/middleV"
+            app:layout_constraintStart_toStartOf="@id/left"
+            app:layout_constraintBottom_toBottomOf="@id/bottom"
+            app:backgroundColor="#ae5fff"
+            app:text="Mes listes"
+            android:padding="10dp"/>
+
+        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toTopOf="@id/middleH"
+            app:layout_constraintEnd_toEndOf="@id/right"
+            app:layout_constraintStart_toStartOf="@id/middleV"
+            app:layout_constraintBottom_toBottomOf="@id/bottom"
+            app:backgroundColor="#6aaeff"
+            android:padding="10dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
