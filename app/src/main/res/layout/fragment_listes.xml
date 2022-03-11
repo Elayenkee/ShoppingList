@@ -222,57 +222,46 @@
             android:id="@+id/btnAllProducts"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:paddingLeft="7dp"
+            android:paddingLeft="15dp"
             android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
             android:adjustViewBounds="false"
-            android:src="@drawable/lister"
-            android:scaleType="center"
+            android:src="@drawable/groceries"
             app:tint="#fff"
             android:background="@drawable/button_bottom_right_background"
             android:layout_gravity="bottom|right"/>
 
     </FrameLayout>
 
+    <!-- DRAWER -->
     <FrameLayout
         android:id="@+id/panelRight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/transparent"
         android:layout_gravity="end">
 
-        <FrameLayout
-            android:id="@+id/panelAllProducts"
-            android:visibility="gone"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/drawer_bottom_right_background">
+            android:layout_marginBottom="-15dp"
+            android:layout_marginRight="-15dp"
+            android:background="@android:color/transparent"
+            app:cardCornerRadius="15dp"
+
+            app:cardElevation="10dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productAllRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="#f00"
-                android:elevation="5dp"
+                android:background="@android:color/transparent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/panelChangeListe"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="40dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/drawer_top_right_background">
-
-
-
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
     </FrameLayout>
 

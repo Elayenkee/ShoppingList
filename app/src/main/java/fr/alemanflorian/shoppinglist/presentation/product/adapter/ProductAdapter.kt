@@ -1,11 +1,13 @@
 package fr.alemanflorian.shoppinglist.presentation.product.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
-import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import kotlinx.android.synthetic.main.item_product.view.*
 import kotlinx.android.synthetic.main.item_product_filtered.view.*
@@ -29,28 +31,50 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int)
     {
-        holder.bind(products[position])
+        holder.bind(products[position], position)
     }
 
     override fun getItemCount() = products.size
 
-    class ProductViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val interactor: Interactor) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product, parent, false))
+    class ProductViewHolder(
+        inflater: LayoutInflater,
+        parent: ViewGroup,
+        private val interactor: Interactor
+    ) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product, parent, false))
     {
         private var data: ProductFromListe? = null
 
         init
         {
+            init(parent.context)
+            itemView.setOnLongClickListener { data?.let { product -> interactor.onProductClicked(
+                product) };true }
             itemView.setOnClickListener {
-                data?.let { product -> interactor.onProductClicked(product) }
-            }
-            itemView.btnAddProduct.setOnClickListener {
-                data?.let {product ->  interactor.onProductAddToCurrentList(product)}
+                data?.let { product ->  interactor.onProductAddToCurrentList(product)}
             }
         }
 
-        fun bind(product: ProductFromListe) {
+        fun bind(product: ProductFromListe, position: Int) {
             data = product
             itemView.productName.text = product.product.name + " x " + product.nb
+            itemView.setBackgroundColor(if (position % 2 == 0) COLOR1 else COLOR2)
+        }
+
+        companion object
+        {
+            var COLOR1:Int = 0
+            var COLOR2:Int = 0
+
+            fun init(context: Context){
+                if(COLOR1 == 0)
+                {
+                    COLOR1 = ContextCompat.getColor(context, R.color.main)
+                    COLOR1 = ColorUtils.setAlphaComponent(COLOR1, 55)
+
+                    COLOR2 = ContextCompat.getColor(context, R.color.second)
+                    COLOR2 = ColorUtils.setAlphaComponent(COLOR2, 55)
+                }
+            }
         }
     }
 
@@ -72,7 +96,7 @@ class ProductFilteredAdapter(private val interactor: Interactor) : RecyclerView.
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ProductViewHolder(inflater, parent, {interactor.onProductClicked(it)})
+        return ProductViewHolder(inflater, parent, { interactor.onProductClicked(it) })
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
@@ -81,13 +105,17 @@ class ProductFilteredAdapter(private val interactor: Interactor) : RecyclerView.
 
     override fun getItemCount() = products.size
 
-    class ProductViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val onClick: (ProductFromListe) -> Unit) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product_filtered, parent, false))
+    class ProductViewHolder(
+        inflater: LayoutInflater,
+        parent: ViewGroup,
+        private val onClick: (ProductFromListe) -> Unit
+    ) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product_filtered, parent, false))
     {
         private var data: ProductFromListe? = null
 
         init {
             itemView.setOnClickListener {
-                data?.let {product ->  onClick.invoke(product)}
+                data?.let { product ->  onClick.invoke(product)}
             }
         }
 
@@ -136,14 +164,18 @@ class ProductListeAdapter(private val interactor: Interactor) : RecyclerView.Ada
         fun onItemClick(product: ProductFromListe)
     }
 
-    class ProductViewHolder(inflater: LayoutInflater, parent: ViewGroup, interactor: Interactor) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product_liste, parent, false))
+    class ProductViewHolder(inflater: LayoutInflater, parent: ViewGroup, interactor: Interactor) : RecyclerView.ViewHolder(
+        inflater.inflate(
+            R.layout.item_product_liste,
+            parent,
+            false))
     {
         private var data: ProductFromListe? = null
 
         init
         {
             itemView.setOnClickListener {
-                data?.let {product ->  interactor.onItemClick(product)}
+                data?.let { product ->  interactor.onItemClick(product)}
             }
         }
 
@@ -154,16 +186,23 @@ class ProductListeAdapter(private val interactor: Interactor) : RecyclerView.Ada
         }
     }
 
-    class SwipeHelperCallback(val adapter : ProductListeAdapter) : ItemTouchHelper.Callback()
+    class SwipeHelperCallback(val adapter: ProductListeAdapter) : ItemTouchHelper.Callback()
     {
-        override fun getMovementFlags(recyclerView: RecyclerView,viewHolder: RecyclerView.ViewHolder): Int
+        override fun getMovementFlags(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder
+        ): Int
         {
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
             val swipeFlags = ItemTouchHelper.START or ItemTouchHelper.END
-            return makeMovementFlags( dragFlags, swipeFlags )
+            return makeMovementFlags(dragFlags, swipeFlags)
         }
 
-        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,target: RecyclerView.ViewHolder): Boolean
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean
         {
             TODO("Not yet implemented")
         }

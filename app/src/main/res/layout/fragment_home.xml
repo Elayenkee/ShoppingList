@@ -89,6 +89,7 @@
             app:layout_constraintEnd_toEndOf="@id/middleV"
             app:layout_constraintStart_toStartOf="@id/left"
             app:layout_constraintBottom_toBottomOf="@id/bottom"
+            app:imageSrc="@drawable/listes"
             app:backgroundColor="#ae5fff"
             app:text="Mes listes"
             android:padding="10dp"/>

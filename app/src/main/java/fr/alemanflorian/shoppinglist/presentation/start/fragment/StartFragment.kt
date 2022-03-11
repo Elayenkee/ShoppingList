@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class StartFragment : CustomFragment()
+class StartFragment : Fragment()
 {
     private val productViewModel : ProductViewModel by viewModel()
     private val listesViewModel : ListesViewModel by viewModel()
@@ -30,7 +30,6 @@ class StartFragment : CustomFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        header.hide()
         GlobalScope.launch(Dispatchers.Default) {
             productViewModel.onStart()
             withContext(Dispatchers.IO)

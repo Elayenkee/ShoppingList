@@ -172,8 +172,6 @@ class ListesFragment : CustomFragment()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)drawer.elevation = 15f
         btnAllProducts.setOnClickListener{
             hideKeyboard();
-            panelChangeListe.visibility = View.GONE
-            panelAllProducts.visibility = View.VISIBLE
             drawer.openDrawer(Gravity.RIGHT)
         }
 
