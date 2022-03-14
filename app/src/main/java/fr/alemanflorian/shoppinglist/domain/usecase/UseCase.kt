@@ -52,7 +52,7 @@ class UseCase (private val repository: Repository){
             emit(Resource.success(product))
         }
     }.catch{
-        emit(Resource.Companion.failure(it))
+        emit(Resource.failure(it))
     }
 
     fun getAllProducts() = flow<Resource<List<Product>>>
@@ -96,7 +96,7 @@ class UseCase (private val repository: Repository){
     }
 
     private suspend fun addToCurrentListe(product: ProductFromListe){
-        val currentListe = repository.getCurrentListe();
+        val currentListe = repository.getCurrentListe()
         currentListe.incrementeProduct(product.product)
         repository.saveListe(currentListe)
         product.nb++
@@ -113,10 +113,10 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    fun deleteProductFromCurrentListe(product: Product) = flow{
+    fun deleteProductFromCurrentListe(product: ProductFromListe) = flow{
         emit(Resource.loading())
-        val currentListe = repository.getCurrentListe();
-        currentListe.deleteProduct(product)
+        val currentListe = repository.getCurrentListe()
+        currentListe.deleteProduct(product.product)
         repository.saveListe(currentListe)
         emit(Resource.success(currentListe))
     }.catch {

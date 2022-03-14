@@ -33,12 +33,6 @@ fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }
 }
 
-fun Fragment.launchIO(method: () -> Unit){
-    GlobalScope.launch(Dispatchers.IO) {
-        method()
-    }
-}
-
 fun Activity.hideKeyboard() {
     hideKeyboard(currentFocus ?: View(this))
 }
@@ -99,18 +93,18 @@ fun questionYesNo(context: Context, message: String, onYes: () -> Unit, onNo: ()
     dialog.show()
 }
 
-@TargetApi(21)
+/*@TargetApi(21)
 fun View.addRippleEffect() {
-    val layerDrawable = context.resources.getDrawable(R.drawable.dummy_ripple) as LayerDrawable
+    val layerDrawable = context.resources.getDrawable(R.drawable.dummy_ripple, null) as LayerDrawable
     layerDrawable.mutate()
     val background = background
     if (background != null) {
         layerDrawable.setDrawableByLayerId(R.id.dummy_ripple_drawable, background)
     }
     setBackground(layerDrawable)
-}
+}*/
 
-fun View.alphaEffect(parent: View?) {
+/*fun View.alphaEffect(parent: View?) {
     setOnTouchListener(object : OnTouchListener {
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             val action = event.action
@@ -119,7 +113,7 @@ fun View.alphaEffect(parent: View?) {
             }
             if (action == MotionEvent.ACTION_DOWN) {
                 down()
-                parent?.setOnTouchListener { view, motionEvent ->
+                parent?.setOnTouchListener { _, motionEvent ->
                     val action = motionEvent.action
                     if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_HOVER_EXIT || action == MotionEvent.ACTION_BUTTON_RELEASE || action == MotionEvent.ACTION_OUTSIDE) {
                         parent.setOnTouchListener(null)
@@ -140,7 +134,7 @@ fun View.alphaEffect(parent: View?) {
             alpha = .8f
         }
     })
-}
+}*/
 
 fun View.clickEffect(parent: View?) {
     setOnTouchListener(object : OnTouchListener {
@@ -152,8 +146,8 @@ fun View.clickEffect(parent: View?) {
             if (action == MotionEvent.ACTION_DOWN) {
                 down()
                 parent?.setOnTouchListener { _, motionEvent ->
-                    val action = motionEvent.action
-                    if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_HOVER_EXIT || action == MotionEvent.ACTION_BUTTON_RELEASE || action == MotionEvent.ACTION_OUTSIDE) {
+                    val a = motionEvent.action
+                    if (a == MotionEvent.ACTION_UP || a == MotionEvent.ACTION_HOVER_EXIT || a == MotionEvent.ACTION_BUTTON_RELEASE || a == MotionEvent.ACTION_OUTSIDE) {
                         parent.setOnTouchListener(null)
                         up()
                     }

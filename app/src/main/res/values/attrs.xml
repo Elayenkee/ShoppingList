@@ -4,6 +4,7 @@
 		<attr name="imageSrc" format="reference"/>
         <attr name="backgroundColor" format="color"/>
         <attr name="text" format="string"/>
+		<attr name="lottie" format="string"/>
 	</declare-styleable>
 
 </resources>

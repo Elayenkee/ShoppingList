@@ -15,7 +15,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -61,8 +61,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:${versions.navigation}"
 
     /* Glide */
-    implementation "com.github.bumptech.glide:glide:${versions.glide}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
+    //implementation "com.github.bumptech.glide:glide:${versions.glide}"
+    //annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
 
     /* Koin */
     implementation "org.koin:koin-android:${versions.koin}"
@@ -81,6 +81,9 @@ dependencies {
 
     /* Init */
     implementation("androidx.startup:startup-runtime:1.1.0")
+
+    /* Lottie Animation */
+    implementation 'com.airbnb.android:lottie:3.4.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -9,12 +9,11 @@ import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
     lateinit var header: Header
@@ -22,10 +21,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         header = Header(findViewById<FrameLayout>(R.id.header))
+
+        val backgroundOne = findViewById<ImageView>(R.id.background_one)
+        val backgroundTwo = findViewById<ImageView>(R.id.background_two)
+
+        val animator = ValueAnimator.ofFloat(0.0f, 1.0f)
+        animator.repeatCount = ValueAnimator.INFINITE
+        animator.interpolator = LinearInterpolator()
+        animator.duration = 10000L
+        animator.addUpdateListener { animation ->
+            val progress = animation.animatedValue as Float
+            val width = backgroundOne.width
+            val translationX = width * progress
+            backgroundOne.setTranslationX(translationX)
+            backgroundTwo.setTranslationX(translationX - width)
+
+            /*val height = backgroundOne.height
+            val translationY = height * progress
+            backgroundOne.setTranslationY(translationY)
+            backgroundTwo.setTranslationY(translationY - height)*/
+        }
+        animator.start()
     }
 }
 
-class Header(val view : View){
+class Header(val view: View){
     val container = view.findViewById<ViewGroup>(R.id.header_container)
     var initialHeight:Float = 60.toPx
 
@@ -51,7 +71,7 @@ class Header(val view : View){
         view.findViewById<TextView>(R.id.header_title)?.setText(title)
     }
 
-    fun addView(layoutID : Int):View
+    fun addView(layoutID: Int):View
     {
         val v = LayoutInflater.from(view.context).inflate(layoutID, container, false)
         container.addView(v)
@@ -71,7 +91,7 @@ class Header(val view : View){
         valueAnimator.start()
     }*/
 
-    private fun collapse(b:Boolean) {
+    private fun collapse(b: Boolean) {
         val h = view.measuredHeight
         val a: Animation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
@@ -108,7 +128,7 @@ class Header(val view : View){
         }
 
         // Collapse speed of 1dp/ms
-        a.setDuration(150);//(initialHeight / v.context.resources.displayMetrics.density).toLong())
+        a.setDuration(150)//(initialHeight / v.context.resources.displayMetrics.density).toLong())
         view.startAnimation(a)
     }
 }

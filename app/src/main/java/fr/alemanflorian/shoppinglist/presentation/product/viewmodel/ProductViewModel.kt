@@ -35,7 +35,7 @@ class ProductViewModel(private val useCase: UseCase):ViewModel()
 
     private val getAllProductsWithCurrentNbParams = MutableLiveData<GetAllProductsWithCurrentNbParams>()
     val getAllProductsWithCurrentNbResult: LiveData<Resource<List<ProductFromListe>>> = getAllProductsWithCurrentNbParams.switchMap {
-        _ -> useCase.getAllProductsWithCurrentNb().asLiveData(contextIO())
+        useCase.getAllProductsWithCurrentNb().asLiveData(contextIO())
     }
     fun getAllProductsWithCurrentNb() {
         getAllProductsWithCurrentNbParams.value = GetAllProductsWithCurrentNbParams()

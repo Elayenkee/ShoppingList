@@ -25,10 +25,10 @@ class ListesViewModel(private val useCase: UseCase): ViewModel() {
     fun decrementeProductToCurrentListe(product: ProductFromListe) {decrementeProductParams.value = DecrementeProductParams(product)
     }
 
-    private class DeleteProductFromCurrentListeParams(val product: Product)
+    private class DeleteProductFromCurrentListeParams(val product: ProductFromListe)
     private val deleteProductFromCurrentListeParams = MutableLiveData<DeleteProductFromCurrentListeParams>()
     val deleteProductFromCurrentListeResult: LiveData<Resource<Liste>> = deleteProductFromCurrentListeParams.switchMap { params -> useCase.deleteProductFromCurrentListe(params.product).asLiveData(contextIO())}
-    fun deleteProductFromCurrentListe(product: Product) {deleteProductFromCurrentListeParams.value = DeleteProductFromCurrentListeParams(product)
+    fun deleteProductFromCurrentListe(product: ProductFromListe) {deleteProductFromCurrentListeParams.value = DeleteProductFromCurrentListeParams(product)
     }
 
     private class GetCurrentListeParams

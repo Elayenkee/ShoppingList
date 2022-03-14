@@ -28,7 +28,7 @@ class HomeFragment : CustomFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeBtnToListes.setOnClickListener {mainNavController().navigate(HomeFragmentDirections.actionHomeToListes(false))}
+        homeBtnToListes.setOnClickListener {mainNavController().navigate(HomeFragmentDirections.actionHomeToListes())}
         homeBtnToListes.clickEffect(view)
 
         homeBtnToShopping.setOnClickListener {
@@ -40,7 +40,7 @@ class HomeFragment : CustomFragment() {
                     if(hasListes)
                         mainNavController().navigate(HomeFragmentDirections.actionHomeToShopping())
                     else
-                        mainNavController().navigate(HomeFragmentDirections.actionHomeToListes(true))
+                        mainNavController().navigate(HomeFragmentDirections.actionHomeToListes())
                 }
             }
         }

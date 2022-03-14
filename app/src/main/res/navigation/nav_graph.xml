@@ -91,11 +91,6 @@
             android:id="@+id/action_listes_to_shopping"
             app:destination="@id/ShoppingFragment" />
 
-        <argument
-            android:name="firstTime"
-            app:argType="boolean"
-            app:nullable="false" />
-
     </fragment>
 
 </navigation>

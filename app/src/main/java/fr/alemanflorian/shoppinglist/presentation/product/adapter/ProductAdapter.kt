@@ -1,6 +1,7 @@
 package fr.alemanflorian.shoppinglist.presentation.product.adapter
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -15,11 +16,25 @@ import kotlinx.android.synthetic.main.item_product_liste.view.*
 
 class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapter<ProductAllAdapter.ProductViewHolder>()
 {
-    private val products = ArrayList<ProductFromListe>()
+    private val products = ArrayList<Any>()
 
     fun setData(data: List<ProductFromListe>) {
         products.clear()
-        products.addAll(data)
+
+        val list = ArrayList<Any>()
+        var current = ""
+        for(d in data)
+        {
+            val firstLetter = d.product.uniqueName[0].toString()
+            if(firstLetter != current)
+            {
+                current = firstLetter
+                list.add(firstLetter.toUpperCase())
+            }
+            list.add(d)
+        }
+
+        products.addAll(list)
         notifyDataSetChanged()
     }
 
@@ -54,9 +69,21 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
             }
         }
 
-        fun bind(product: ProductFromListe, position: Int) {
-            data = product
-            itemView.productName.text = product.product.name + " x " + product.nb
+        fun bind(o: Any, position: Int) {
+            if(o is ProductFromListe)
+            {
+                data = o
+                itemView.productName.text = o.product.name + (if(o.nb > 0)" x " + o.nb else "")
+                itemView.productName.textSize = 16f
+                itemView.productName.setTypeface(null, if(o.nb > 0)Typeface.BOLD else Typeface.NORMAL)
+
+            }
+            else if(o is String)
+            {
+                itemView.productName.text = o
+                itemView.productName.setTypeface(null, Typeface.BOLD_ITALIC)
+                itemView.productName.textSize = 22f
+            }
             itemView.setBackgroundColor(if (position % 2 == 0) COLOR1 else COLOR2)
         }
 

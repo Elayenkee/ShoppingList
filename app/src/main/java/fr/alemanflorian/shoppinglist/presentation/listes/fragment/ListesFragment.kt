@@ -26,7 +26,6 @@ import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
 import fr.alemanflorian.shoppinglist.presentation.common.extension.hideKeyboard
-import fr.alemanflorian.shoppinglist.presentation.common.extension.launchIO
 import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
 import fr.alemanflorian.shoppinglist.presentation.common.extension.questionYesNo
 import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
@@ -47,12 +46,9 @@ class ListesFragment : CustomFragment()
     private val productViewModel : ProductViewModel by viewModel()
     private val listesViewModel : ListesViewModel by viewModel()
 
-    private var allProducts = mutableListOf<ProductFromListe>()
+    private var allProducts = ArrayList<ProductFromListe>()
 
     private var popupChangeListe: ChangeListe? = null
-    //private lateinit var txtSearchProduct:TextView
-
-    private var firsTime:Boolean = false
 
     private val adapterAll = ProductAllAdapter(object : ProductAllAdapter.Interactor {
         override fun onProductClicked(product: ProductFromListe) {
@@ -79,7 +75,7 @@ class ListesFragment : CustomFragment()
 
     private val adapterListe = ProductListeAdapter(object : ProductListeAdapter.Interactor{
         override fun onItemDismiss(product: ProductFromListe) {
-            listesViewModel.deleteProductFromCurrentListe(product.product)
+            listesViewModel.deleteProductFromCurrentListe(product)
         }
 
         override fun onItemClick(product: ProductFromListe) {
@@ -95,16 +91,9 @@ class ListesFragment : CustomFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        initArguments()
         initViewObserver()
         initView()
         refresh()
-    }
-
-    private fun initArguments()
-    {
-        val arguments: ListesFragmentArgs by navArgs()
-        firsTime = arguments.firstTime
     }
 
     private fun initView()
@@ -116,9 +105,6 @@ class ListesFragment : CustomFragment()
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(productListeRecyclerView)
 
-        //val vHeader = header.addView(R.layout.product_all_header)
-
-        //txtSearchProduct = vHeader.findViewById(R.id.txtSearchProduct)
         txtSearchProduct.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -168,35 +154,27 @@ class ListesFragment : CustomFragment()
         }
 
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent))
-        drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)drawer.elevation = 15f
+        drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START)
+        drawer.elevation = 15f
         btnAllProducts.setOnClickListener{
-            hideKeyboard();
-            drawer.openDrawer(Gravity.RIGHT)
+            hideKeyboard()
+            drawer.openDrawer(Gravity.END)
         }
 
-        /*vHeader.findViewById<View>(R.id.productAllHeaderBtnChangeList).setOnClickListener {
-            hideKeyboard()
-            popupChangeListe = ChangeListe(listeViewModel, viewLifecycleOwner)
-            popupChangeListe!!.show(requireContext())
-        }*/
         header.addView(R.layout.button_change_liste).setOnClickListener {
             hideKeyboard()
             popupChangeListe = ChangeListe(listesViewModel, viewLifecycleOwner)
             popupChangeListe!!.show(requireContext())
         }
 
-        if(firsTime || true)
-        {
-            fragmentListesBtnGoShopping.visibility = View.VISIBLE
-            fragmentListesBtnGoShopping.isEnabled = false
-            fragmentListesBtnGoShopping.setOnClickListener {
-                GlobalScope.launch(Dispatchers.IO) {
-                    listesViewModel.setCurrentListeAsListeEnCours()
-                    withContext(Dispatchers.Main)
-                    {
-                        mainNavController().navigate(ListesFragmentDirections.actionListesToShopping())
-                    }
+        fragmentListesBtnGoShopping.visibility = View.VISIBLE
+        fragmentListesBtnGoShopping.isEnabled = false
+        fragmentListesBtnGoShopping.setOnClickListener {
+            GlobalScope.launch(Dispatchers.IO) {
+                listesViewModel.setCurrentListeAsListeEnCours()
+                withContext(Dispatchers.Main)
+                {
+                    mainNavController().navigate(ListesFragmentDirections.actionListesToShopping())
                 }
             }
         }
@@ -256,7 +234,8 @@ class ListesFragment : CustomFragment()
             if (it is Resource.Success)
             {
                 adapterAll.setData(it.data)
-                allProducts = it.data.toMutableList()
+                allProducts.clear()
+                allProducts.addAll(it.data)
             }
         }
 
@@ -312,6 +291,7 @@ class ListesFragment : CustomFragment()
 
         listesViewModel.deleteProductFromCurrentListeResult.observe(viewLifecycleOwner){
             System.err.println("on deleteProductFromCurrentListeResult")
+            listesViewModel.getProductsOfCurrentListe()
         }
 
         listesViewModel.saveNewListeResult.observe(viewLifecycleOwner){
