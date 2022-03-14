@@ -53,6 +53,12 @@ val Number.toPx get() = TypedValue.applyDimension(
     Resources.getSystem().displayMetrics
 )
 
+val Number.toDp get() = TypedValue.applyDimension(
+    TypedValue.COMPLEX_UNIT_PX,
+    this.toFloat(),
+    Resources.getSystem().displayMetrics
+)
+
 fun View.translate(translationXTo: Float, translationYTo: Float, pDuration: Long){
     val valueAnimatorX = ValueAnimator.ofFloat(translationX, translationXTo.toPx).apply {
         interpolator = LinearInterpolator()

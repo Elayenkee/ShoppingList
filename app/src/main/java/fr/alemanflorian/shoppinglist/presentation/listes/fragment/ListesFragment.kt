@@ -15,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -25,9 +26,8 @@ import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
-import fr.alemanflorian.shoppinglist.presentation.common.extension.hideKeyboard
-import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
-import fr.alemanflorian.shoppinglist.presentation.common.extension.questionYesNo
+import fr.alemanflorian.shoppinglist.presentation.common.extension.*
+import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
 import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ChangeListeAdapter
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductAllAdapter
@@ -156,6 +156,18 @@ class ListesFragment : CustomFragment()
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent))
         drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START)
         drawer.elevation = 15f
+        drawer.addDrawerListener(object : DrawerLayout.DrawerListener{
+            var opened = false
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {
+                if(newState == 2)
+                    opened = !opened
+                productListeRecyclerViewParent.translationX = if(opened)-70f.toPx else 0f
+            }
+
+        })
         btnAllProducts.setOnClickListener{
             hideKeyboard()
             drawer.openDrawer(Gravity.END)

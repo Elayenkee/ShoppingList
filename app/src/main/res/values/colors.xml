@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    <color name="main">#f816a463</color>
-    <color name="second">#FF018786</color>
-    -->
+    <color name="green_main">#f816a463</color>
+    <color name="green_second">#FF018786</color>
+
     <color name="main">#f5ab2c</color>
     <color name="second">#fac430</color>
 </resources>

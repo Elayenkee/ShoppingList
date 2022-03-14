@@ -19,7 +19,13 @@ class UseCase (private val repository: Repository){
     }
 
     suspend fun hasListes():Boolean{
-        return !repository.getAllListes().isEmpty()
+        val listes = repository.getAllListes();
+        for(liste in listes)
+        {
+            if(!liste.isEmpty())
+                return true
+        }
+        return false
     }
 
     suspend fun hasListeEnCours():Boolean{
