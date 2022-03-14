@@ -159,8 +159,14 @@ class ListesFragment : CustomFragment()
         drawer.addDrawerListener(object : DrawerLayout.DrawerListener{
             var opened = false
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-            override fun onDrawerOpened(drawerView: View) {}
-            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerOpened(drawerView: View) {
+                opened = true
+                productListeRecyclerViewParent.translationX = -70f.toPx
+            }
+            override fun onDrawerClosed(drawerView: View) {
+                opened = false
+                productListeRecyclerViewParent.translationX = 0f
+            }
             override fun onDrawerStateChanged(newState: Int) {
                 if(newState == 2)
                     opened = !opened
@@ -179,7 +185,6 @@ class ListesFragment : CustomFragment()
             popupChangeListe!!.show(requireContext())
         }
 
-        fragmentListesBtnGoShopping.visibility = View.VISIBLE
         fragmentListesBtnGoShopping.isEnabled = false
         fragmentListesBtnGoShopping.setOnClickListener {
             GlobalScope.launch(Dispatchers.IO) {
@@ -269,7 +274,7 @@ class ListesFragment : CustomFragment()
             {
                 adapterListe.setData(it.data)
                 layoutEmpty.visibility = if(it.data.size > 0) View.GONE else View.VISIBLE
-                productListeRecyclerView.visibility = if(it.data.size > 0) View.VISIBLE else View.INVISIBLE
+                productListeRecyclerViewParent.visibility = if(it.data.size > 0) View.VISIBLE else View.INVISIBLE
                 fragmentListesBtnGoShopping.isEnabled = it.data.size > 0
                 fragmentListesBtnGoShopping.alpha = if (it.data.size > 0) 1f else .4f
             }
@@ -396,9 +401,8 @@ class ListesFragment : CustomFragment()
         {
             override fun onMeasure(widthSpec: Int, heightSpec: Int)
             {
-                var heightSpec = heightSpec
-                heightSpec = MeasureSpec.makeMeasureSpec(500, MeasureSpec.AT_MOST)
-                super.onMeasure(widthSpec, heightSpec)
+                var height = MeasureSpec.makeMeasureSpec(500, MeasureSpec.AT_MOST)
+                super.onMeasure(widthSpec, height)
             }
         }
     }

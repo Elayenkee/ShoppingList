@@ -142,6 +142,7 @@
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/productListeRecyclerViewParent"
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="50dp"
@@ -161,7 +162,6 @@
 
                     <FrameLayout
                         android:id="@+id/fragmentListesBtnGoShopping"
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:layout_gravity="bottom"

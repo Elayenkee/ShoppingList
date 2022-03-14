@@ -30,21 +30,18 @@ class StartFragment : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        GlobalScope.launch(Dispatchers.Default) {
+        GlobalScope.launch(Dispatchers.IO) {
             productViewModel.onStart()
-            withContext(Dispatchers.IO)
+            val hasListeEnCours = listesViewModel.hasListeEnCours()
+            withContext(Dispatchers.Main)
             {
-                val hasListeEnCours = listesViewModel.hasListeEnCours()
-                withContext(Dispatchers.Main)
+                if(hasListeEnCours)
                 {
-                    if(hasListeEnCours)
-                    {
-                        mainNavController().navigate(StartFragmentDirections.actionStartToShopping())
-                    }
-                    else
-                    {
-                        mainNavController().navigate(StartFragmentDirections.actionStartToHome())
-                    }
+                    mainNavController().navigate(StartFragmentDirections.actionStartToShopping())
+                }
+                else
+                {
+                    mainNavController().navigate(StartFragmentDirections.actionStartToHome())
                 }
             }
         }

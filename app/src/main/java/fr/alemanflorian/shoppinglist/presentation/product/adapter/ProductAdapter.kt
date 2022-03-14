@@ -62,8 +62,8 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
         init
         {
             init(parent.context)
-            itemView.setOnLongClickListener { data?.let { product -> interactor.onProductClicked(
-                product) };true }
+            /*itemView.setOnLongClickListener { data?.let { product -> interactor.onProductClicked(
+                product) };true }*/
             itemView.setOnClickListener {
                 data?.let { product ->  interactor.onProductAddToCurrentList(product)}
             }
@@ -82,7 +82,7 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
             {
                 itemView.productName.text = o
                 itemView.productName.setTypeface(null, Typeface.BOLD_ITALIC)
-                itemView.productName.textSize = 22f
+                itemView.productName.textSize = 25f
             }
             itemView.setBackgroundColor(if (position % 2 == 0) COLOR1 else COLOR2)
         }
