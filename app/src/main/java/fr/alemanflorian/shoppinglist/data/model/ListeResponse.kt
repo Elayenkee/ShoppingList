@@ -4,10 +4,7 @@ import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.Json
-import fr.alemanflorian.shoppinglist.data.database.ProductDao
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
-import fr.alemanflorian.shoppinglist.domain.entity.Product
 
 @Keep
 @Entity(tableName = "liste")
@@ -23,7 +20,6 @@ data class ListeResponse(
 ){
     fun toModel():Liste
     {
-        System.err.println("ListeResponse:toModel {$this}")
         val mapProducts = LinkedHashMap<Long, Pair<Int, Int>>()
         try{
             val tab = products.split(";")

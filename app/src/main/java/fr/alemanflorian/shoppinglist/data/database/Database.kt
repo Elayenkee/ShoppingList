@@ -5,7 +5,6 @@ import androidx.room.Room
 
 fun createDatabase(appContext: Context): AppDatabase
 {
-    System.err.println("RoomDatabase :: createDatabase")
     val db = Room.databaseBuilder(appContext, AppDatabase::class.java, "kotlin-architecture")
         .fallbackToDestructiveMigration()
         .build()

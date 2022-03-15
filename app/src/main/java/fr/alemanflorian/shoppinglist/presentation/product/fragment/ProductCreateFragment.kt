@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
@@ -48,9 +47,9 @@ class ProductCreateFragment : CustomFragment()
 
     private fun saveProduct()
     {
-        val pName = productCreateTxtName.text.toString()
-        if(pName.length > 0)
-            viewModel.saveProduct(Product(0, pName))
+        val name = productCreateTxtName.text.toString()
+        if(name.length > 0)
+            viewModel.saveProduct(Product(name))
     }
 
     private fun initViewObserver()
@@ -58,16 +57,14 @@ class ProductCreateFragment : CustomFragment()
         viewModel.saveProductResult.observe(viewLifecycleOwner, {
             if (it is Resource.Success)
             {
-                System.err.println("SUCCESS")
                 mainNavController().navigate(ProductCreateFragmentDirections.actionProductCreateToHome())
             }
             else  if (it is Resource.Progress)
             {
-                System.err.println("PROGRESS")
+
             }
             else  if (it is Resource.Failure)
             {
-                System.err.println("FAILURE " + it)
                 if(it.throwable is SQLiteConstraintException)
                 {
                     Toast.makeText(requireContext(), "Ce produit existe déjà.", Toast.LENGTH_LONG).show()

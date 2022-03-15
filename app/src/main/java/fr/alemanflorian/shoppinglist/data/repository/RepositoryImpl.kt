@@ -7,7 +7,6 @@ import fr.alemanflorian.shoppinglist.data.database.ProductDao
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
 import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.repository.Repository
-import java.lang.Exception
 
 class RepositoryImpl(private val productDao: ProductDao, private val listeDao : ListeDao, appContext: Application) : Repository{
     private val sharedPrefs = appContext.getSharedPreferences(PREFERENCE_FILE_NAME, Context.MODE_PRIVATE)
@@ -17,11 +16,15 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
 
     var cachedCurrentListe: Liste? = null
 
+    var initialized = false
+
     override fun onStart() {
+        if(initialized)
+            return
+
         val count = productDao.count()
         if(count <= 10 || true)
         {
-            System.err.println("RepositoryImpl :: onStart : " + System.currentTimeMillis())
             insertAll("ail", "bagels", "baguette", "brioches", "chapelure", "croissant", "croûtons", "crêpes", "donuts",
                 "gauffres", "pain", "pain complet", "pain de mie", "abricot", "amandes", "ananas", "artichaut", "asperges", "aubergine", "avocat",
                 "banane", "basilic", "betterave", "blettes", "brocoli", "cacahuètes", "carottes", "cerises", "champignons", "chou", "ciboulette",
@@ -32,7 +35,6 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
                 "moutarde", "vinaigre", "lentilles", "poivre", "sel", "sucre", "bières", "café", "eau", "dentifrice", "coton", "couches",
                 "gel douche", "shampooing", "éponges", "ampoule", "ciseaux"
             )
-            System.err.println("RepositoryImpl :: onStart > " + System.currentTimeMillis())
         }
     }
 
@@ -41,7 +43,7 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
         for(name : String in all)
         {
             try {
-                productDao.insert(Product(0, name).toResponse())
+                productDao.insert(Product(name).toResponse())
             }
             catch(e:Exception){}
         }
@@ -80,7 +82,6 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
     }
 
     override suspend fun saveListe(liste: Liste) {
-        System.err.println("RepoImpl::saveListe {$liste}")
         val listeResponse = liste.toResponse()
         val id = listeDao.insert(listeResponse)
         listeResponse.id = id
@@ -147,7 +148,6 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
 
     override fun saveCurrentListe(liste:Liste)
     {
-        System.err.println("RepoImpl::saveCurrentListe {$liste}")
         cachedCurrentListe = liste
         sharedPrefs.edit().putLong(CURRENT_LISTE_ID, liste.id).apply()
     }
@@ -179,7 +179,6 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
     }
 
     override fun setListeEnCours(liste: Liste) {
-        System.err.println("RepoImpl::setListeEnCours {$liste}")
         sharedPrefs.edit().putLong(LISTE_ENCOURS_ID, liste.id).apply()
     }
 

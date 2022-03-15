@@ -1,12 +1,10 @@
 package fr.alemanflorian.shoppinglist
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
-import android.view.animation.LinearInterpolator
 import android.view.animation.Transformation
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -100,7 +98,6 @@ class Header(val view: View){
                     {
                         view.layoutParams.height = h - (h * interpolatedTime).toInt()
                         view.requestLayout()
-                        System.err.println(">> " + view.layoutParams.height)
                     }
                 }
                 else

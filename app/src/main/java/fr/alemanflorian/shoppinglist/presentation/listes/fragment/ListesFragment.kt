@@ -241,7 +241,7 @@ class ListesFragment : CustomFragment()
                 }
                 else
                 {
-                    questionYesNo("Voulez-vous ajouter '$name' dans l'application ?", {productViewModel.saveNewProduct(Product(name = name))}, {})
+                    questionYesNo("Voulez-vous ajouter '$name' dans l'application ?", {productViewModel.saveNewProduct(Product(name))}, {})
                 }
             }
             false
@@ -314,7 +314,6 @@ class ListesFragment : CustomFragment()
 
             override fun delete(liste: Liste)
             {
-                System.err.println("Delete " + liste.name)
                 val builder = AlertDialog.Builder(context)
                 builder.setMessage("Supprimer cette liste ?")
                 builder.setPositiveButton(android.R.string.ok) { _, _ ->

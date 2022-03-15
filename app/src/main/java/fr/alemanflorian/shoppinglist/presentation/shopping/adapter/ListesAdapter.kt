@@ -38,7 +38,6 @@ class ListesAdapter(private val interactor: Interactor) : RecyclerView.Adapter<L
 
         init
         {
-            System.err.println(liste)
             itemView.setOnClickListener{liste?.let { liste -> interactor.onClicked(liste)}}
         }
 

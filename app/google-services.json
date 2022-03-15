@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "118100887836",
+    "project_id": "shoppy-14e6b",
+    "storage_bucket": "shoppy-14e6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118100887836:android:1dcc53264c3fe78be712d9",
+        "android_client_info": {
+          "package_name": "fr.alemanflorian.shoppinglist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118100887836-4eivkb0vjmblom9973kpda7alpp0iprp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnW6Bw8lJhxSRA3yC2NMiQB_Ri1K_HXB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118100887836-4eivkb0vjmblom9973kpda7alpp0iprp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
