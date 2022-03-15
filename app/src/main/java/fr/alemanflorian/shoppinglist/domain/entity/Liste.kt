@@ -67,7 +67,7 @@ data class Liste(var id: Long = 0, var name: String, val products: LinkedHashMap
         return 0
     }
 
-    fun isEmpty():Boolean = products == null || products.isEmpty()
+    fun isEmpty():Boolean = products.isEmpty()
 
     fun isFinished():Boolean{
         for(p in products.values)
