@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
-import kotlinx.android.synthetic.main.fragment_listes.*
 import kotlinx.android.synthetic.main.item_product.view.*
 import kotlinx.android.synthetic.main.item_product_filtered.view.*
 import kotlinx.android.synthetic.main.item_product_liste.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapter<ProductAllAdapter.ProductViewHolder>()
 {
@@ -30,7 +31,7 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
             if(firstLetter != current)
             {
                 current = firstLetter
-                list.add(firstLetter.toUpperCase())
+                list.add(firstLetter.toUpperCase(Locale.getDefault()))
             }
             list.add(d)
         }
@@ -74,7 +75,8 @@ class ProductAllAdapter(private val interactor: Interactor) : RecyclerView.Adapt
             if(o is ProductFromListe)
             {
                 data = o
-                itemView.productName.text = o.product.name + (if(o.nb > 0)" x " + o.nb else "")
+                val strNb = (if(o.nb > 0)" x " + o.nb else "")
+                itemView.productName.text = "${o.product.name} $strNb"
                 itemView.productName.textSize = 16f
                 itemView.productName.setTypeface(null, if(o.nb > 0)Typeface.BOLD else Typeface.NORMAL)
 
@@ -216,7 +218,7 @@ class ProductListeAdapter(private val interactor: Interactor) : RecyclerView.Ada
         fun bind(product: ProductFromListe)
         {
             data = product
-            itemView.productNameListe.text = product.product.name + " x " + product.nb
+            itemView.productNameListe.text = "${product.product.name} x ${product.nb}"
         }
     }
 
@@ -238,7 +240,7 @@ class ProductListeAdapter(private val interactor: Interactor) : RecyclerView.Ada
             target: RecyclerView.ViewHolder
         ): Boolean
         {
-            TODO("Not yet implemented")
+            return false
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
