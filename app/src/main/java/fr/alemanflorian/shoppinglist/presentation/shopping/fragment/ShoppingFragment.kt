@@ -10,9 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.Animation
 import android.view.animation.Transformation
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SpinnerAdapter
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
@@ -45,25 +42,18 @@ class ShoppingFragment  : CustomFragment(){
         }
     })
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View?
-    {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         return inflater.inflate(R.layout.fragment_shopping, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
         initViewObserver()
         initView()
         refresh()
     }
 
-    private fun initViewObserver()
-    {
+    private fun initViewObserver(){
         shoppingViewModel.initListeEnCoursResult.observe(viewLifecycleOwner){
             if(it is Resource.Success)
             {
@@ -82,14 +72,6 @@ class ShoppingFragment  : CustomFragment(){
                 else
                 {
                     pan1.visibility = View.VISIBLE
-                    /*val listes = it.data.listes
-                    val listesNames = it.data.listes.map { it.name }
-                    FragmentShoppingListesSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listesNames)
-                    FragmentShoppingSelectListe.setOnClickListener {
-                        val listeClicked = listes[FragmentShoppingListesSpinner.selectedItemPosition]
-                        shoppingViewModel.setListeEnCours(listeClicked)
-                        shoppingViewModel.initListeEnCours()
-                    }*/
                     adapterListes.setData(it.data.listes)
                 }
             }
@@ -101,6 +83,17 @@ class ShoppingFragment  : CustomFragment(){
                     onListeFinished()
             }
         }
+    }
+
+    private fun initView(){
+        header.hide()
+        pan1.visibility = View.INVISIBLE
+        FragmentShoppingListeRecyclerView.adapter = adapterListe
+        FragmentShoppingListesRecyclerView.adapter = adapterListes
+    }
+
+    private fun refresh(){
+        shoppingViewModel.initListeEnCours()
     }
 
     private fun onListeFinished(){
@@ -125,19 +118,7 @@ class ShoppingFragment  : CustomFragment(){
         }
     }
 
-    private fun initView()
-    {
-        header.hide()
-        pan1.visibility = View.INVISIBLE
-        FragmentShoppingListeRecyclerView.adapter = adapterListe
-        FragmentShoppingListesRecyclerView.adapter = adapterListes
-    }
-
-    private fun refresh(){
-        shoppingViewModel.initListeEnCours()
-    }
-
-    fun collapse(v: View) {
+    private fun collapse(v: View) {
         v.alpha = .5f
         val initialHeight = v.measuredHeight
         val a: Animation = object : Animation() {
@@ -157,7 +138,7 @@ class ShoppingFragment  : CustomFragment(){
         }
 
         // Collapse speed of 1dp/ms
-        a.setDuration(500);//(initialHeight / v.context.resources.displayMetrics.density).toLong())
+        a.setDuration(500)
         v.startAnimation(a)
     }
 }
