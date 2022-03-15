@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         val backgroundOne = findViewById<ImageView>(R.id.background_one)
         val backgroundTwo = findViewById<ImageView>(R.id.background_two)
 
-        val animator = ValueAnimator.ofFloat(0.0f, 1.0f)
+        /*val animator = ValueAnimator.ofFloat(0.0f, 1.0f)
         animator.repeatCount = ValueAnimator.INFINITE
         animator.interpolator = LinearInterpolator()
         animator.duration = 10000L
@@ -35,13 +35,8 @@ class MainActivity : AppCompatActivity() {
             val translationX = width * progress
             backgroundOne.setTranslationX(translationX)
             backgroundTwo.setTranslationX(translationX - width)
-
-            /*val height = backgroundOne.height
-            val translationY = height * progress
-            backgroundOne.setTranslationY(translationY)
-            backgroundTwo.setTranslationY(translationY - height)*/
         }
-        animator.start()
+        animator.start()*/
     }
 }
 

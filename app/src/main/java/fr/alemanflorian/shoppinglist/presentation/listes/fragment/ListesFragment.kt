@@ -1,11 +1,11 @@
 package fr.alemanflorian.shoppinglist.presentation.listes.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,8 +17,6 @@ import android.widget.TextView
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
@@ -26,7 +24,9 @@ import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
-import fr.alemanflorian.shoppinglist.presentation.common.extension.*
+import fr.alemanflorian.shoppinglist.presentation.common.extension.hideKeyboard
+import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
+import fr.alemanflorian.shoppinglist.presentation.common.extension.questionYesNo
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
 import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
 import fr.alemanflorian.shoppinglist.presentation.product.adapter.ChangeListeAdapter
@@ -96,15 +96,121 @@ class ListesFragment : CustomFragment()
         refresh()
     }
 
+    private fun initViewObserver() {
+        productViewModel.saveNewProductResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+            {
+                containerFiltre.visibility = View.GONE
+                txtSearchProduct.hideKeyboard()
+                txtSearchProduct.setText("")
+                refresh()
+            }
+        }
+
+        productViewModel.getAllProductsWithCurrentNbResult.observe(viewLifecycleOwner) {
+            if (it is Resource.Success)
+            {
+                adapterAll.setData(it.data)
+                allProducts.clear()
+                allProducts.addAll(it.data)
+            }
+        }
+
+        listesViewModel.addProductResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+                refresh()
+        }
+
+        listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+                refresh()
+        }
+
+        listesViewModel.getCurrentListeResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+            {
+                header.setTitle(it.data.liste.name)
+
+                adapterListe.setData(it.data.products)
+                layoutEmpty.visibility = if(it.data.products.size > 0) View.GONE else View.VISIBLE
+                productListeRecyclerViewParent.visibility = if(it.data.products.size > 0) View.VISIBLE else View.INVISIBLE
+                fragmentListesBtnGoShopping.isEnabled = it.data.products.size > 0
+                fragmentListesBtnGoShopping.alpha = if (it.data.products.size > 0) 1f else .4f
+            }
+        }
+
+        listesViewModel.deleteListeResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+                refresh()
+        }
+
+        listesViewModel.saveCurrentListeResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+                refresh()
+        }
+
+        listesViewModel.deleteProductFromCurrentListeResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+                refresh()
+        }
+
+        listesViewModel.saveNewListeResult.observe(viewLifecycleOwner){
+            if(it is Resource.Success)
+            {
+                refresh()
+                popupChangeListe?.dismiss()
+                popupChangeListe = null
+            }
+        }
+    }
+
+    @SuppressLint("WrongConstant")
     private fun initView()
     {
-        productAllRecyclerView.adapter = adapterAll
-        productFilteredRecyclerView.adapter = adapterFiltered
-        productListeRecyclerView.adapter = adapterListe
-        val callback = ProductListeAdapter.SwipeHelperCallback(adapterListe)
-        val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(productListeRecyclerView)
+        //region Header
+        header.addView(R.layout.button_change_liste).setOnClickListener {
+            hideKeyboard()
+            popupChangeListe = ChangeListe(listesViewModel, viewLifecycleOwner)
+            popupChangeListe!!.show(requireContext())
+        }
+        //endregion
 
+        //region Liste en cours
+        productListeRecyclerView.adapter = adapterListe
+        adapterListe.addSwipeListener(productListeRecyclerView)
+        //endregion
+
+        //region Tous les produits
+        productAllRecyclerView.adapter = adapterAll
+        drawer.setScrimColor(getResources().getColor(android.R.color.transparent))
+        drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START)
+        drawer.elevation = 15f
+        drawer.addDrawerListener(object : DrawerLayout.DrawerListener{
+            var opened = false
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {
+                opened = true
+                productListeRecyclerViewParent.translationX = -70f.toPx
+            }
+            override fun onDrawerClosed(drawerView: View) {
+                opened = false
+                productListeRecyclerViewParent.translationX = 0f
+            }
+            override fun onDrawerStateChanged(newState: Int) {
+                if(newState == 2)
+                    opened = !opened
+                productListeRecyclerViewParent.translationX = if(opened)-70f.toPx else 0f
+            }
+
+        })
+        btnAllProducts.setOnClickListener{
+            hideKeyboard()
+            drawer.openDrawer(Gravity.END)
+        }
+        //endregion
+
+        //region Recherche
+        productFilteredRecyclerView.adapter = adapterFiltered
         txtSearchProduct.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
             }
@@ -147,44 +253,13 @@ class ListesFragment : CustomFragment()
             }
             false
         }
-
         containerFiltre.setOnClickListener{
             containerFiltre.visibility = View.GONE
             txtSearchProduct.hideKeyboard()
         }
+        //endregion
 
-        drawer.setScrimColor(getResources().getColor(android.R.color.transparent))
-        drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START)
-        drawer.elevation = 15f
-        drawer.addDrawerListener(object : DrawerLayout.DrawerListener{
-            var opened = false
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-            override fun onDrawerOpened(drawerView: View) {
-                opened = true
-                productListeRecyclerViewParent.translationX = -70f.toPx
-            }
-            override fun onDrawerClosed(drawerView: View) {
-                opened = false
-                productListeRecyclerViewParent.translationX = 0f
-            }
-            override fun onDrawerStateChanged(newState: Int) {
-                if(newState == 2)
-                    opened = !opened
-                productListeRecyclerViewParent.translationX = if(opened)-70f.toPx else 0f
-            }
-
-        })
-        btnAllProducts.setOnClickListener{
-            hideKeyboard()
-            drawer.openDrawer(Gravity.END)
-        }
-
-        header.addView(R.layout.button_change_liste).setOnClickListener {
-            hideKeyboard()
-            popupChangeListe = ChangeListe(listesViewModel, viewLifecycleOwner)
-            popupChangeListe!!.show(requireContext())
-        }
-
+        //region Bouton Finish
         fragmentListesBtnGoShopping.isEnabled = false
         fragmentListesBtnGoShopping.setOnClickListener {
             GlobalScope.launch(Dispatchers.IO) {
@@ -195,6 +270,13 @@ class ListesFragment : CustomFragment()
                 }
             }
         }
+        //endregion
+    }
+
+    private fun refresh()
+    {
+        productViewModel.getAllProductsWithCurrentNb()
+        listesViewModel.getCurrentListe()
     }
 
     private fun productExists(s: String):Product?
@@ -227,102 +309,6 @@ class ListesFragment : CustomFragment()
         }
     }
 
-    private fun refresh() {
-        System.err.println("refresh")
-        productViewModel.getAllProductsWithCurrentNb()
-        listesViewModel.getProductsOfCurrentListe()
-        listesViewModel.getCurrentListe()
-    }
-
-    private fun initViewObserver() {
-        productViewModel.saveNewProductResult.observe(viewLifecycleOwner){
-            System.err.println("on saveNewProductResult")
-            if(it is Resource.Success)
-            {
-                containerFiltre.visibility = View.GONE
-                txtSearchProduct.hideKeyboard()
-                txtSearchProduct.setText("")
-                refresh()
-            }
-        }
-
-        productViewModel.getAllProductsWithCurrentNbResult.observe(viewLifecycleOwner) {
-            System.err.println("on getAllProductsWithCurrentNbResult")
-            if (it is Resource.Success)
-            {
-                adapterAll.setData(it.data)
-                allProducts.clear()
-                allProducts.addAll(it.data)
-            }
-        }
-
-        listesViewModel.addProductResult.observe(viewLifecycleOwner){
-            System.err.println("on addProductResult")
-            if(it is Resource.Success)
-                refresh()
-        }
-
-        listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
-            System.err.println("on decrementeProductResult")
-            if(it is Resource.Success)
-                refresh()
-        }
-
-        listesViewModel.getProductsOfCurrentListeResult.observe(viewLifecycleOwner){
-            System.err.println("on getProductsOfCurrentListeResult")
-            if(it is Resource.Success)
-            {
-                adapterListe.setData(it.data)
-                layoutEmpty.visibility = if(it.data.size > 0) View.GONE else View.VISIBLE
-                productListeRecyclerViewParent.visibility = if(it.data.size > 0) View.VISIBLE else View.INVISIBLE
-                fragmentListesBtnGoShopping.isEnabled = it.data.size > 0
-                fragmentListesBtnGoShopping.alpha = if (it.data.size > 0) 1f else .4f
-            }
-        }
-
-        listesViewModel.getCurrentListeResult.observe(viewLifecycleOwner){
-            System.err.println("on getCurrentListeResult")
-            if(it is Resource.Success)
-            {
-                header.setTitle(it.data.name)
-            }
-        }
-
-        listesViewModel.deleteListeResult.observe(viewLifecycleOwner){
-            System.err.println("on deleteListeResult")
-            if(it is Resource.Success)
-            {
-                listesViewModel.getCurrentListe()
-                listesViewModel.getProductsOfCurrentListe()
-            }
-        }
-
-        listesViewModel.saveCurrentListeResult.observe(viewLifecycleOwner){
-            System.err.println("on saveCurrentListeResult")
-            if(it is Resource.Success)
-            {
-                listesViewModel.getCurrentListe()
-                listesViewModel.getProductsOfCurrentListe()
-            }
-        }
-
-        listesViewModel.deleteProductFromCurrentListeResult.observe(viewLifecycleOwner){
-            System.err.println("on deleteProductFromCurrentListeResult")
-            listesViewModel.getProductsOfCurrentListe()
-        }
-
-        listesViewModel.saveNewListeResult.observe(viewLifecycleOwner){
-            System.err.println("on saveNewListeResult")
-            if(it is Resource.Success)
-            {
-                listesViewModel.getCurrentListe()
-                listesViewModel.getProductsOfCurrentListe()
-                popupChangeListe?.dismiss()
-                popupChangeListe = null
-            }
-        }
-    }
-    
     class ChangeListe(val listesViewModel : ListesViewModel, val viewLifecycleOwner: LifecycleOwner){
         private lateinit var context: Context
         private lateinit var dialog: Dialog
@@ -428,7 +414,7 @@ class ListesFragment : CustomFragment()
             }
 
             dialog.setOnDismissListener {
-                listesViewModel.getProductsOfCurrentListe()
+                listesViewModel.getCurrentListe()
             }
 
             listesViewModel.addProductResult.observe(viewLifecycleOwner){

@@ -2,6 +2,7 @@ package fr.alemanflorian.shoppinglist.presentation.listes.viewmodel
 
 import androidx.lifecycle.*
 import fr.alemanflorian.shoppinglist.domain.entity.Liste
+import fr.alemanflorian.shoppinglist.domain.entity.ListeAvecProduits
 import fr.alemanflorian.shoppinglist.domain.entity.Product
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
@@ -33,18 +34,10 @@ class ListesViewModel(private val useCase: UseCase): ViewModel() {
 
     private class GetCurrentListeParams
     private val getCurrentListeParams = MutableLiveData<GetCurrentListeParams>()
-    val getCurrentListeResult: LiveData<Resource<Liste>> = getCurrentListeParams.switchMap {
+    val getCurrentListeResult: LiveData<Resource<ListeAvecProduits>> = getCurrentListeParams.switchMap {
         useCase.getCurrentListe().asLiveData(contextIO())
     }
     fun getCurrentListe(){getCurrentListeParams.value = GetCurrentListeParams()
-    }
-
-    private class GetProductsOfCurrentListeParams
-    private val getProductsOfCurrentListeParams = MutableLiveData<GetProductsOfCurrentListeParams>()
-    val getProductsOfCurrentListeResult: LiveData<Resource<List<ProductFromListe>>> = getProductsOfCurrentListeParams.switchMap {
-        useCase.getProductsOfCurrentListe().asLiveData(contextIO())
-    }
-    fun getProductsOfCurrentListe(){getProductsOfCurrentListeParams.value = GetProductsOfCurrentListeParams()
     }
 
     private class GetAllListeParams

@@ -56,8 +56,7 @@ data class Liste(var id: Long, var name: String, val products: LinkedHashMap<Lon
             products.remove(product.id)
     }
 
-    fun getNbOfProduct(product: Product):Int
-    {
+    fun getNbOfProduct(product: Product):Int{
         if(products.containsKey(product.id))
             return products.get(product.id)!!.first
         return 0

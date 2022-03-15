@@ -1,10 +1,7 @@
 package fr.alemanflorian.shoppinglist.domain.usecase
 
 import android.content.res.Resources
-import fr.alemanflorian.shoppinglist.domain.entity.Liste
-import fr.alemanflorian.shoppinglist.domain.entity.ListeEnCours
-import fr.alemanflorian.shoppinglist.domain.entity.Product
-import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
+import fr.alemanflorian.shoppinglist.domain.entity.*
 import fr.alemanflorian.shoppinglist.domain.repository.Repository
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
@@ -132,7 +129,7 @@ class UseCase (private val repository: Repository){
     fun getCurrentListe() = flow{
         emit(Resource.loading())
         val liste = repository.getCurrentListe()
-        emit(Resource.success(liste))
+        emit(Resource.success(ListeAvecProduits(repository.getCurrentListe(), repository)))
     }.catch {
         emit(Resource.failure(it))
     }
@@ -158,7 +155,7 @@ class UseCase (private val repository: Repository){
         repository.saveListe(liste)
     }
 
-    fun getProductsOfCurrentListe() = flow<Resource<List<ProductFromListe>>> {
+    /*fun getProductsOfCurrentListe() = flow<Resource<List<ProductFromListe>>> {
         emit(Resource.loading())
         val liste = repository.getCurrentListe()
         val products = mutableListOf<ProductFromListe>()
@@ -169,15 +166,10 @@ class UseCase (private val repository: Repository){
                 products.add(ProductFromListe.create(product, liste.getNbOfProduct(product)))
         }
         products.reverse()
-        /*products.sortWith(object : Comparator<ProductFromListe>{
-            override fun compare(o1: ProductFromListe?, o2: ProductFromListe?): Int {
-                return o1!!.product.uniqueName.compareTo(o2!!.product.uniqueName)
-            }
-        })*/
         emit(Resource.success(products))
     }.catch {
         emit(Resource.failure(it))
-    }
+    }*/
 
     fun deleteListe(liste: Liste) = flow{
         emit(Resource.loading())
@@ -218,7 +210,7 @@ class UseCase (private val repository: Repository){
 
         if(liste != null)
         {
-            val result = ListeEnCours.create(liste, repository)
+            val result = ListeEnCours(liste, repository)
             emit(Resource.success(InitListeEnCoursResult(result, ArrayList())))
         }
         else

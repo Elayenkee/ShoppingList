@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import fr.alemanflorian.shoppinglist.R
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
+import kotlinx.android.synthetic.main.fragment_listes.*
 import kotlinx.android.synthetic.main.item_product.view.*
 import kotlinx.android.synthetic.main.item_product_filtered.view.*
 import kotlinx.android.synthetic.main.item_product_liste.view.*
@@ -160,6 +161,12 @@ class ProductFilteredAdapter(private val interactor: Interactor) : RecyclerView.
 class ProductListeAdapter(private val interactor: Interactor) : RecyclerView.Adapter<ProductListeAdapter.ProductViewHolder>()
 {
     private val products = ArrayList<ProductFromListe>()
+
+    fun addSwipeListener(listView:RecyclerView){
+        val callback = SwipeHelperCallback(this)
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(listView)
+    }
 
     fun setData(data: List<ProductFromListe>) {
         products.clear()
