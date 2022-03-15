@@ -69,7 +69,7 @@ class UseCase (private val repository: Repository){
     fun getAllProductsWithCurrentNb() = flow<Resource<List<ProductFromListe>>>
     {
         val liste = repository.getCurrentListe()
-        val allProducts = repository.getAllProducts().map { ProductFromListe.create(it, liste.getNbOfProduct(it)) }
+        val allProducts = repository.getAllProducts().map { ProductFromListe(it, liste.getNbOfProduct(it)) }
         emit(Resource.success(allProducts))
     }.catch {
         emit(Resource.failure(it))
@@ -128,7 +128,6 @@ class UseCase (private val repository: Repository){
 
     fun getCurrentListe() = flow{
         emit(Resource.loading())
-        val liste = repository.getCurrentListe()
         emit(Resource.success(ListeAvecProduits(repository.getCurrentListe(), repository)))
     }.catch {
         emit(Resource.failure(it))
@@ -151,26 +150,6 @@ class UseCase (private val repository: Repository){
         emit(Resource.failure(it))
     }
 
-    suspend fun saveListe(liste:Liste){
-        repository.saveListe(liste)
-    }
-
-    /*fun getProductsOfCurrentListe() = flow<Resource<List<ProductFromListe>>> {
-        emit(Resource.loading())
-        val liste = repository.getCurrentListe()
-        val products = mutableListOf<ProductFromListe>()
-        for(idProduct in liste.products.keys)
-        {
-            val product = repository.getProduct(idProduct)
-            if(product != null)
-                products.add(ProductFromListe.create(product, liste.getNbOfProduct(product)))
-        }
-        products.reverse()
-        emit(Resource.success(products))
-    }.catch {
-        emit(Resource.failure(it))
-    }*/
-
     fun deleteListe(liste: Liste) = flow{
         emit(Resource.loading())
         repository.deleteListe(liste)
@@ -182,7 +161,7 @@ class UseCase (private val repository: Repository){
     fun saveProductAndAddToCurrentListe(product: Product) = flow{
         emit(Resource.loading())
         repository.saveProduct(product)
-        addToCurrentListe(ProductFromListe.create(product))
+        addToCurrentListe(ProductFromListe(product))
         emit(Resource.success(product))
     }.catch {
         emit(Resource.failure(it))

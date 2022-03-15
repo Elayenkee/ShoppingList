@@ -9,7 +9,7 @@ open class ListeAvecProduits(val liste:Liste, val products:ArrayList<ProductFrom
             val product = repository.getProduct(p.key)
             if(product != null)
             {
-                val productFromListe = ProductFromListe.create(product, p.value.first, p.value.second)
+                val productFromListe = ProductFromListe(product, p.value.first, p.value.second)
                 products.add(productFromListe)
             }
         }

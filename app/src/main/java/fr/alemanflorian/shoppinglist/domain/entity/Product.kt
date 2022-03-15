@@ -8,10 +8,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Keep
 @Parcelize
-data class Product(var id: Long, var pName: String): Parcelable{
-    val name = pName.capitalize()
-    val uniqueName = name.toLowerCase().unaccent()
+class Product(var id: Long = 0, val name:String, val uniqueName:String): Parcelable{
+
     fun toResponse():ProductResponse {
-        return ProductResponse(id = id, name = name, unique_name = uniqueName)
+        return ProductResponse(id, name, uniqueName)
     }
+
+    constructor(id:Long = 0, name: String):this(id, name.capitalize(), name.toLowerCase().unaccent())
 }

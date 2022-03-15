@@ -19,5 +19,5 @@ data class ProductResponse(
     @ColumnInfo(name = "unique_name")
     val unique_name: String,
 ){
-    fun toModel() = Product(id = id, pName = name)
+    fun toModel() = Product(id, name)
 }

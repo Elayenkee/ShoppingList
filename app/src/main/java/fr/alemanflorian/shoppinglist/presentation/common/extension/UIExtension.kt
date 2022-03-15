@@ -33,10 +33,6 @@ fun Fragment.hideKeyboard() {
     view?.let { activity?.hideKeyboard(it) }
 }
 
-fun Activity.hideKeyboard() {
-    hideKeyboard(currentFocus ?: View(this))
-}
-
 fun Context.hideKeyboard(view: View) {
     val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
@@ -53,13 +49,7 @@ val Number.toPx get() = TypedValue.applyDimension(
     Resources.getSystem().displayMetrics
 )
 
-val Number.toDp get() = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_PX,
-    this.toFloat(),
-    Resources.getSystem().displayMetrics
-)
-
-fun View.translate(translationXTo: Float, translationYTo: Float, pDuration: Long){
+/*fun View.translate(translationXTo: Float, translationYTo: Float, pDuration: Long){
     val valueAnimatorX = ValueAnimator.ofFloat(translationX, translationXTo.toPx).apply {
         interpolator = LinearInterpolator()
         duration = pDuration
@@ -79,9 +69,9 @@ fun View.translate(translationXTo: Float, translationYTo: Float, pDuration: Long
         translationY = value
     }
     valueAnimatorY.start()
-}
+}*/
 
-fun questionYesNo(context: Context, message: String, onYes: () -> Unit, onNo: () -> Unit)
+fun Fragment.questionYesNo(message: String, onYes: () -> Unit, onNo: () -> Unit)
 {
     lateinit var dialog: AlertDialog
     val builder = AlertDialog.Builder(context)

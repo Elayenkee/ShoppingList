@@ -182,6 +182,7 @@ class ListesFragment : CustomFragment()
 
         //region Tous les produits
         productAllRecyclerView.adapter = adapterAll
+        @Suppress("DEPRECATION")
         drawer.setScrimColor(getResources().getColor(android.R.color.transparent))
         drawer.setDrawerShadow(android.R.color.transparent, GravityCompat.START)
         drawer.elevation = 15f
@@ -233,23 +234,15 @@ class ListesFragment : CustomFragment()
                 val product = productExists(name)
                 if(product != null)
                 {
-                    val p = ProductFromListe.create(product)
-                    listesViewModel.addProductToCurrentListe(p)
+                    listesViewModel.addProductToCurrentListe(ProductFromListe(product))
                     containerFiltre.visibility = View.GONE
                     txtSearchProduct.hideKeyboard()
                     txtSearchProduct.setText("")
                 }
                 else
                 {
-                    questionYesNo(
-                        requireContext(),
-                        "Voulez-vous ajouter '$name' dans l'application ?",
-                        {
-                            productViewModel.saveNewProduct(Product(0, name))
-                        },
-                        {})
+                    questionYesNo("Voulez-vous ajouter '$name' dans l'application ?", {productViewModel.saveNewProduct(Product(name = name))}, {})
                 }
-                true
             }
             false
         }
