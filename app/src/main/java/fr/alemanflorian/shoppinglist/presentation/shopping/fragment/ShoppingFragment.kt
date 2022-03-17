@@ -16,9 +16,8 @@ import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
 import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
-import fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentDirections
-import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ProductsAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ListesAdapter
+import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ProductsAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
 import kotlinx.android.synthetic.main.fragment_shopping.*
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +25,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class ShoppingFragment  : CustomFragment(){
     private val shoppingViewModel : ShoppingViewModel by viewModel()
@@ -65,12 +63,14 @@ class ShoppingFragment  : CustomFragment(){
                     header.show()
                     header.hideBackButton()
                     header.setTitle(it.data.listeEnCours.liste.name)
+                    overrideBackButton{true}
                     adapterListeProducts.setData(it.data.listeEnCours.products)
                     if(it.data.listeEnCours.liste.isFinished())
                         onListeFinished()
                 }
                 else
                 {
+                    overrideBackButton{false}
                     pan1.visibility = View.VISIBLE
                     adapterListes.setData(it.data.listes)
                 }
@@ -90,11 +90,6 @@ class ShoppingFragment  : CustomFragment(){
         pan1.visibility = View.INVISIBLE
         FragmentShoppingListeRecyclerView.adapter = adapterListeProducts
         FragmentShoppingListesRecyclerView.adapter = adapterListes
-
-        overrideBackButton {
-            System.err.println("TEST")
-            pan1.visibility != View.VISIBLE
-        }
     }
 
     private fun refresh(){
@@ -147,8 +142,6 @@ class ShoppingFragment  : CustomFragment(){
                 return true
             }
         }
-
-        // Collapse speed of 1dp/ms
         a.setDuration(500)
         v.startAnimation(a)
     }
