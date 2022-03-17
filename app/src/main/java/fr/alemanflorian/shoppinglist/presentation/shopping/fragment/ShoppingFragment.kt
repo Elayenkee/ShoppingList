@@ -15,6 +15,8 @@ import fr.alemanflorian.shoppinglist.domain.entity.Liste
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
+import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
+import fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentDirections
 import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ProductsAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ListesAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
@@ -59,11 +61,9 @@ class ShoppingFragment  : CustomFragment(){
             {
                 if(it.data.listeEnCours != null)
                 {
-                    if(pan1.visibility == View.INVISIBLE)
-                        pan1.visibility = View.GONE
-                    else
-                        collapse(pan1)
+                    collapse(pan1)
                     header.show()
+                    header.hideBackButton()
                     header.setTitle(it.data.listeEnCours.liste.name)
                     adapterListeProducts.setData(it.data.listeEnCours.products)
                     if(it.data.listeEnCours.liste.isFinished())
@@ -90,6 +90,11 @@ class ShoppingFragment  : CustomFragment(){
         pan1.visibility = View.INVISIBLE
         FragmentShoppingListeRecyclerView.adapter = adapterListeProducts
         FragmentShoppingListesRecyclerView.adapter = adapterListes
+
+        overrideBackButton {
+            System.err.println("TEST")
+            pan1.visibility != View.VISIBLE
+        }
     }
 
     private fun refresh(){
@@ -112,13 +117,19 @@ class ShoppingFragment  : CustomFragment(){
                 withContext(Dispatchers.Main)
                 {
                     dialog.dismiss()
-                    requireActivity().onBackPressed()
+                    mainNavController().navigate(ShoppingFragmentDirections.actionShoppingToHome())
                 }
             }
         }
     }
 
     private fun collapse(v: View) {
+        if(v.visibility == View.INVISIBLE)
+        {
+            v.visibility = View.GONE
+            return
+        }
+
         v.alpha = .5f
         val initialHeight = v.measuredHeight
         val a: Animation = object : Animation() {

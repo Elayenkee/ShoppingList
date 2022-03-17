@@ -15,5 +15,10 @@ open class CustomFragment  : Fragment()
         super.onViewCreated(view, savedInstanceState)
         header = (requireActivity() as MainActivity).header
         header.reset()
+        (requireActivity() as MainActivity).overridedBackButton = null
+    }
+
+    fun overrideBackButton(overridedBackButton:()->Boolean){
+        (requireActivity() as MainActivity).overridedBackButton = overridedBackButton
     }
 }

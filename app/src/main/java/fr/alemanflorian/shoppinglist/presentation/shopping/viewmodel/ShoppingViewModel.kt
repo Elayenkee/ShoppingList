@@ -31,6 +31,10 @@ class ShoppingViewModel(private val useCase: UseCase): ViewModel() {
     class ClickProductResult(val product: ProductFromListe, val listeFinished:Boolean)
     //endregion
 
+    suspend fun hasListeEnCours():Boolean{
+        return useCase.hasListeEnCours()
+    }
+
     suspend fun finishListeEnCours(){
         useCase.finishListeEnCours()
     }

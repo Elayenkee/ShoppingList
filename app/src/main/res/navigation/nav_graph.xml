@@ -31,11 +31,19 @@
 
         <action
             android:id="@+id/action_home_to_shopping"
-            app:destination="@id/ShoppingFragment" />
+            app:destination="@id/ShoppingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
 
         <action
             android:id="@+id/action_home_to_listes"
-            app:destination="@id/ListesFragment" />
+            app:destination="@id/ListesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
 
     </fragment>
 
@@ -46,6 +54,13 @@
         android:label="ShoppingFragment"
         tools:layout="@layout/fragment_shopping">
 
+        <action
+            android:id="@+id/action_shopping_to_home"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
 
     </fragment>
 
@@ -58,7 +73,11 @@
 
         <action
             android:id="@+id/action_listes_to_shopping"
-            app:destination="@id/ShoppingFragment" />
+            app:destination="@id/ShoppingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
 
     </fragment>
 

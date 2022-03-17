@@ -8,17 +8,33 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var header: Header
+
+    var overridedBackButton:(()->Boolean)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         header = Header(findViewById<FrameLayout>(R.id.header))
         header.backButton.setOnClickListener { onBackPressed() }
+    }
+
+    @MainThread
+    override fun onBackPressed()
+    {
+        if(overridedBackButton != null)
+        {
+            val interrupt = overridedBackButton!!.invoke()
+            if(interrupt)
+                return
+        }
+        super.onBackPressed()
     }
 }
 
@@ -30,6 +46,7 @@ class Header(val view: View){
     fun reset(){
         show()
         setTitle("")
+        showBackbutton()
         container.removeAllViews()
     }
 
@@ -43,6 +60,16 @@ class Header(val view: View){
         view.visibility = View.GONE
         //translate(-120f)
         //collapse(true)
+    }
+
+    fun showBackbutton()
+    {
+        backButton.visibility = View.VISIBLE
+    }
+
+    fun hideBackButton()
+    {
+        backButton.visibility = View.GONE
     }
 
     fun setTitle(title: String){
