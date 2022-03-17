@@ -22,7 +22,7 @@
             android:layout_marginBottom="25dp"
             android:textSize="25sp"
             android:textColor="#000"
-            android:text="Fini !"/>
+            android:text="@string/fini"/>
 
         <FrameLayout
             android:id="@+id/PopupShoppingFinishedBtnContinuer"
@@ -31,7 +31,7 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="15dp"
             android:elevation="5dp"
-            android:contentDescription="bouton_continuer"
+            android:contentDescription="@string/bouton_continuer"
             android:background="@drawable/button_round_background">
 
             <FrameLayout
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="#fff"
-                    android:text="Continuer"
+                    android:text="@string/continuer"
                     android:textSize="20sp"
                     android:fontFamily="@font/main"/>
 
@@ -60,7 +60,7 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="5dp"
             android:elevation="5dp"
-            android:contentDescription="bouton_quitter"
+            android:contentDescription="@string/bouton_quitter"
             android:background="@drawable/button_round_background">
 
             <FrameLayout
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="#fff"
-                    android:text="Quitter"
+                    android:text="@string/quitter"
                     android:textSize="20sp"
                     android:fontFamily="@font/main"/>
 

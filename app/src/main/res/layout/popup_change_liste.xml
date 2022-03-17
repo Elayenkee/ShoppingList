@@ -44,7 +44,7 @@
                 android:importantForAutofill="no"
                 android:imeOptions="actionDone"
                 android:inputType="text"
-                android:hint="Créer une liste"/>
+                android:hint="@string/create_liste"/>
 
             <ImageView
                 android:id="@+id/popupChangeListeBtnCreate"
@@ -54,7 +54,7 @@
                 android:padding="10dp"
                 android:src="@drawable/add_new_list"
                 android:background="@drawable/button_round_background"
-                android:contentDescription="bouton_create_liste"
+                android:contentDescription="@string/bouton_create_liste"
                 app:tint="#fff"/>
 
         </LinearLayout>

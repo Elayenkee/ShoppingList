@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:alpha=".2"
         android:scaleType="fitXY"
-        android:contentDescription="main_background"
+        android:contentDescription="@string/main_background"
         android:src="@drawable/app_background"/>
 
     <LinearLayout
@@ -39,7 +39,7 @@
                 android:background="@drawable/button_round_background"
                 android:src="@drawable/button_back"
                 android:padding="7dp"
-                android:contentDescription="header_bouton_back"
+                android:contentDescription="@string/header_bouton_back"
                 app:tint="#fff" />
 
             <TextView

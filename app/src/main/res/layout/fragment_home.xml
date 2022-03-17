@@ -64,7 +64,7 @@
             app:layout_constraintBottom_toBottomOf="@id/middleH"
             app:imageSrc="@drawable/go_shopping"
             app:backgroundColor="#43ff9e"
-            app:text="Partir faire les courses"
+            app:text="@string/go_shopping"
             android:padding="10dp"/>
 
         <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton
@@ -95,7 +95,7 @@
             app:layout_constraintBottom_toBottomOf="@id/middleH"
             app:imageSrc="@drawable/listes"
             app:backgroundColor="#ae5fff"
-            app:text="Mes listes"
+            app:text="@string/mes_listes"
             android:padding="10dp"/>
 
         <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton

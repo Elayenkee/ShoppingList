@@ -36,7 +36,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:imeOptions="actionDone"
-                    android:hint="Ajouter un produit"
+                    android:hint="@string/ajouter_produit"
                     android:importantForAutofill="no"
                     android:singleLine="true"
                     android:inputType="text"
@@ -73,13 +73,13 @@
                             android:layout_marginEnd="20dp"
                             android:src="@drawable/arrow"
                             android:rotation="290"
-                            android:contentDescription="image_fleche_top"
+                            android:contentDescription="@string/image_fleche_top"
                             app:tint="@color/second"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ajoutez un produit depuis la recherche"
+                            android:text="@string/ajouter_produit_depuis_recherche"
                             android:textSize="22sp"
                             android:textColor="@color/main"
                             android:fontFamily="@font/main"
@@ -98,7 +98,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Ajoutez un produit depuis la liste de tous les produits"
+                            android:text="@string/ajouter_produit_depuis_produits"
                             android:gravity="end"
                             android:textSize="22sp"
                             android:layout_weight="1"
@@ -111,7 +111,7 @@
                             android:layout_marginStart="20dp"
                             android:adjustViewBounds="true"
                             android:src="@drawable/arrow"
-                            android:contentDescription="image_fleche_bottom"
+                            android:contentDescription="@string/image_fleche_bottom"
                             android:rotation="60"
                             app:tint="@color/second"/>
 
@@ -130,13 +130,13 @@
                             android:layout_height="wrap_content"
                             android:textSize="18sp"
                             android:textColor="#000"
-                            android:text="La liste est vide"/>
+                            android:text="@string/liste_vide"/>
 
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:adjustViewBounds="true"
-                            android:contentDescription="empty_liste"
+                            android:contentDescription="@string/empty_liste"
                             android:src="@drawable/empty_list"
                             app:tint="#000"/>
 
@@ -175,9 +175,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:layout_gravity="bottom"
-                        android:layout_marginRight="85dp"
+                        android:layout_marginEnd="85dp"
                         android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:elevation="5dp"
                         android:background="@drawable/button_round_background">
 
@@ -194,7 +194,7 @@
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
                                 android:layout_marginEnd="15dp"
-                                android:contentDescription="image_go_shopping"
+                                android:contentDescription="@string/image_go_shopping"
                                 app:tint="#fff"/>
 
                             <TextView
@@ -202,7 +202,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:textColor="#fff"
-                                android:text="J'ai fini ma liste !"
+                                android:text="@string/liste_finie"
                                 android:textSize="20sp"
                                 android:fontFamily="@font/main"/>
 
@@ -252,7 +252,7 @@
             android:paddingEnd="10dp"
             android:adjustViewBounds="false"
             android:src="@drawable/groceries"
-            android:contentDescription="fragment_listes_bouton_all_products"
+            android:contentDescription="@string/fragment_listes_bouton_all_products"
             app:tint="#fff"
             android:background="@drawable/button_bottom_right_background"
             android:layout_gravity="bottom|end"/>

@@ -21,6 +21,6 @@
         android:src="@drawable/product_ok"
         android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="15dp"
-        android:contentDescription="product_checked"/>
+        android:contentDescription="@string/product_checked"/>
 
 </FrameLayout>

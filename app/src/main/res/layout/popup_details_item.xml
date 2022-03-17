@@ -20,8 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
-            android:textColor="#000"
-            android:text="Produit"/>
+            android:textColor="#000"/>
 
         <LinearLayout
             android:layout_marginTop="15dp"
@@ -45,7 +44,7 @@
                     android:padding="10dp"
                     android:src="@drawable/minus"
                     android:background="@drawable/button_round_background"
-                    android:contentDescription="popup_details_produit_bouton_moins"
+                    android:contentDescription="@string/popup_details_produit_bouton_moins"
                     app:tint="#fff"/>
 
             </FrameLayout>
@@ -65,7 +64,7 @@
                     android:padding="10dp"
                     android:src="@drawable/plus"
                     android:background="@drawable/button_round_background"
-                    android:contentDescription="popup_details_produit_bouton_plus"
+                    android:contentDescription="@string/popup_details_produit_bouton_plus"
                     app:tint="#fff"/>
 
             </FrameLayout>

@@ -1,3 +1,34 @@
 <resources>
     <string name="app_name">Shoppy</string>
+
+    <!-- App -->
+    <string name="fini">Fini !</string>
+    <string name="continuer">Continuer</string>
+    <string name="quitter">Quitter</string>
+    <string name="ajouter_produit">Ajouter un produit</string>
+    <string name="ajouter_produit_depuis_recherche">Ajoutez un produit depuis la recherche</string>
+    <string name="ajouter_produit_depuis_produits">Ajoutez un produit depuis la liste de tous les produits</string>
+    <string name="liste_vide">La liste est vide</string>
+    <string name="liste_finie">J\'ai fini ma liste !</string>
+    <string name="create_liste">Créer une liste</string>
+    <string name="go_shopping">Partir faire les courses</string>
+    <string name="mes_listes">Mes listes</string>
+
+    <!-- Content Descriptions -->
+    <string name="fragment_listes_bouton_change_liste">fragment_listes_bouton_change_liste</string>
+    <string name="main_background">main_background</string>
+    <string name="header_bouton_back">header_bouton_back</string>
+    <string name="product_checked">product_checked</string>
+    <string name="popup_details_produit_bouton_moins">popup_details_produit_bouton_moins</string>
+    <string name="popup_details_produit_bouton_plus">popup_details_produit_bouton_plus</string>
+    <string name="bouton_continuer">bouton_continuer</string>
+    <string name="bouton_quitter">bouton_quitter</string>
+    <string name="bouton_supprimer">bouton_supprimer</string>
+    <string name="image_fleche_top">image_fleche_top</string>
+    <string name="image_fleche_bottom">image_fleche_bottom</string>
+    <string name="empty_liste">empty_liste</string>
+    <string name="image_go_shopping">image_go_shopping</string>
+    <string name="fragment_listes_bouton_all_products">fragment_listes_bouton_all_products</string>
+    <string name="bouton_create_liste">bouton_create_liste</string>
+
 </resources>
