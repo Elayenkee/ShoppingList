@@ -18,12 +18,12 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
 
     var initialized = false
 
-    override fun onStart() {
+    override fun onStartApp() {
         if(initialized)
             return
 
         val count = productDao.count()
-        if(count <= 10 || true)
+        if(count <= 10)
         {
             insertAll("ail", "bagels", "baguette", "brioches", "chapelure", "croissant", "croûtons", "crêpes", "donuts",
                 "gauffres", "pain", "pain complet", "pain de mie", "abricot", "amandes", "ananas", "artichaut", "asperges", "aubergine", "avocat",
@@ -99,8 +99,8 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
 
     override suspend fun deleteListe(liste: Liste) {
         listeDao.delete(liste = liste.toResponse())
-        val listeID = liste.id;
-        val currentListeID = getCurrentListe(false, false)?.id;
+        val listeID = liste.id
+        val currentListeID = getCurrentListe(false, false)?.id
         if(listeID == currentListeID)
         {
             val newCurrentListe = listeDao.findFirstListe()
@@ -172,7 +172,7 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
         val liste = getListeEnCours()
         if(liste != null)
         {
-            liste.finish()
+            liste.reset()
             saveListe(liste)
             sharedPrefs.edit().putLong(LISTE_ENCOURS_ID, -1).apply()
         }
@@ -185,6 +185,6 @@ class RepositoryImpl(private val productDao: ProductDao, private val listeDao : 
     companion object {
         private const val PREFERENCE_FILE_NAME = "MyListe"
         private const val CURRENT_LISTE_ID = "currentListeID"
-        private const val LISTE_ENCOURS_ID = "listeEnCoursID";
+        private const val LISTE_ENCOURS_ID = "listeEnCoursID"
     }
 }

@@ -8,9 +8,11 @@ import fr.alemanflorian.shoppinglist.data.network.createApiClient
 import fr.alemanflorian.shoppinglist.data.repository.RepositoryImpl
 import fr.alemanflorian.shoppinglist.domain.repository.Repository
 import fr.alemanflorian.shoppinglist.domain.usecase.UseCase
+import fr.alemanflorian.shoppinglist.presentation.home.viewmodel.HomeViewModel
 import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
-import fr.alemanflorian.shoppinglist.presentation.product.viewmodel.ProductViewModel
+//import fr.alemanflorian.shoppinglist.presentation.product.viewmodel.ProductViewModel
 import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
+import fr.alemanflorian.shoppinglist.presentation.start.viewmodel.StartViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -25,9 +27,11 @@ val appModules by lazy {
 }
 
 val viewModelModule: Module = module {
-    viewModel {ProductViewModel(useCase = get())}
+    //viewModel {ProductViewModel(useCase = get())}
     viewModel { ListesViewModel(useCase = get()) }
     viewModel { ShoppingViewModel(useCase = get()) }
+    viewModel { StartViewModel(useCase = get()) }
+    viewModel { HomeViewModel(useCase = get()) }
 }
 
 val useCaseModule: Module = module {

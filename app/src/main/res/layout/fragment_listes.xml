@@ -9,15 +9,18 @@
     android:background="@android:color/transparent"
     tools:openDrawer="start">
 
+    <!-- ALL -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- CONTENT -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- RECHERCHE -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -34,7 +37,9 @@
                     android:layout_marginRight="10dp"
                     android:imeOptions="actionDone"
                     android:hint="Ajouter un produit"
+                    android:importantForAutofill="no"
                     android:singleLine="true"
+                    android:inputType="text"
                     android:maxLines="1"/>
 
             </androidx.cardview.widget.CardView>
@@ -43,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <!-- LAYOUT EMPTY -->
                 <FrameLayout
                     android:id="@+id/layoutEmpty"
                     android:visibility="gone"
@@ -64,9 +70,10 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="70dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginEnd="20dp"
                             android:src="@drawable/arrow"
                             android:rotation="290"
+                            android:contentDescription="image_fleche_top"
                             app:tint="@color/second"/>
 
                         <TextView
@@ -89,10 +96,10 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Ajoutez un produit depuis la liste de tous les produits"
-                            android:gravity="right"
+                            android:gravity="end"
                             android:textSize="22sp"
                             android:layout_weight="1"
                             android:fontFamily="@font/main"
@@ -101,9 +108,10 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="100dp"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:adjustViewBounds="true"
                             android:src="@drawable/arrow"
+                            android:contentDescription="image_fleche_bottom"
                             android:rotation="60"
                             app:tint="@color/second"/>
 
@@ -128,6 +136,7 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:adjustViewBounds="true"
+                            android:contentDescription="empty_liste"
                             android:src="@drawable/empty_list"
                             app:tint="#000"/>
 
@@ -135,6 +144,7 @@
 
                 </FrameLayout>
 
+                <!-- LISTE -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -144,7 +154,7 @@
                         android:id="@+id/productListeRecyclerViewParent"
                         android:visibility="invisible"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_marginStart="50dp"
                         android:layout_marginEnd="50dp"
                         android:layout_marginTop="20dp"
@@ -178,12 +188,13 @@
                             android:orientation="horizontal">
 
                             <ImageView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="35dp"
                                 android:src="@drawable/go_shopping"
                                 android:layout_weight="1"
                                 android:adjustViewBounds="true"
-                                android:layout_marginRight="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:contentDescription="image_go_shopping"
                                 app:tint="#fff"/>
 
                             <TextView
@@ -192,7 +203,7 @@
                                 android:layout_gravity="center"
                                 android:textColor="#fff"
                                 android:text="J'ai fini ma liste !"
-                                android:textSize="20dp"
+                                android:textSize="20sp"
                                 android:fontFamily="@font/main"/>
 
                         </LinearLayout>
@@ -201,6 +212,7 @@
 
                 </LinearLayout>
 
+                <!-- DROPDOWN RECHERCHE -->
                 <FrameLayout
                     android:id="@+id/containerFiltre"
                     android:visibility="gone"
@@ -229,19 +241,21 @@
 
         </LinearLayout>
 
+        <!-- BOUTON ALL PRODUCTS -->
         <ImageView
             android:id="@+id/btnAllProducts"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
             android:paddingTop="10dp"
             android:paddingBottom="5dp"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:adjustViewBounds="false"
             android:src="@drawable/groceries"
+            android:contentDescription="fragment_listes_bouton_all_products"
             app:tint="#fff"
             android:background="@drawable/button_bottom_right_background"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|end"/>
 
     </FrameLayout>
 
@@ -256,10 +270,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="-15dp"
-            android:layout_marginRight="-15dp"
+            android:layout_marginEnd="-15dp"
             android:background="@android:color/transparent"
             app:cardCornerRadius="15dp"
 

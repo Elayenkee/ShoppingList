@@ -15,7 +15,7 @@ import fr.alemanflorian.shoppinglist.domain.entity.Liste
 import fr.alemanflorian.shoppinglist.domain.entity.ProductFromListe
 import fr.alemanflorian.shoppinglist.domain.resource.Resource
 import fr.alemanflorian.shoppinglist.presentation.common.CustomFragment
-import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ListeAdapter
+import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ProductsAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.adapter.ListesAdapter
 import fr.alemanflorian.shoppinglist.presentation.shopping.viewmodel.ShoppingViewModel
 import kotlinx.android.synthetic.main.fragment_shopping.*
@@ -36,7 +36,7 @@ class ShoppingFragment  : CustomFragment(){
         }
     })
 
-    private val adapterListe = ListeAdapter(object : ListeAdapter.Interactor{
+    private val adapterListeProducts = ProductsAdapter(object : ProductsAdapter.Interactor{
         override fun onClicked(productFromListe: ProductFromListe) {
             shoppingViewModel.clickProduct(productFromListe)
         }
@@ -65,7 +65,7 @@ class ShoppingFragment  : CustomFragment(){
                         collapse(pan1)
                     header.show()
                     header.setTitle(it.data.listeEnCours.liste.name)
-                    adapterListe.setData(it.data.listeEnCours.products)
+                    adapterListeProducts.setData(it.data.listeEnCours.products)
                     if(it.data.listeEnCours.liste.isFinished())
                         onListeFinished()
                 }
@@ -78,7 +78,7 @@ class ShoppingFragment  : CustomFragment(){
         }
         shoppingViewModel.clickProductResult.observe(viewLifecycleOwner){
             if(it is Resource.Success) {
-                adapterListe.notifyItemChanged(it.data.product)
+                adapterListeProducts.notifyItemChanged(it.data.product)
                 if(it.data.listeFinished)
                     onListeFinished()
             }
@@ -88,7 +88,7 @@ class ShoppingFragment  : CustomFragment(){
     private fun initView(){
         header.hide()
         pan1.visibility = View.INVISIBLE
-        FragmentShoppingListeRecyclerView.adapter = adapterListe
+        FragmentShoppingListeRecyclerView.adapter = adapterListeProducts
         FragmentShoppingListesRecyclerView.adapter = adapterListes
     }
 

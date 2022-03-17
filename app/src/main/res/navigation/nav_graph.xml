@@ -39,33 +39,6 @@
 
     </fragment>
 
-    <!-- PRODUCT -->
-    <fragment
-        android:id="@+id/productFragment"
-        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductFragment"
-        android:label="ProductFragment"
-        tools:layout="@layout/fragment_product">
-
-        <argument
-            android:name="product"
-            app:argType="fr.alemanflorian.shoppinglist.domain.entity.Product"
-            app:nullable="false" />
-
-    </fragment>
-
-    <!-- CREATE PRODUCT -->
-    <fragment
-        android:id="@+id/productCreateFragment"
-        android:name="fr.alemanflorian.shoppinglist.presentation.product.fragment.ProductCreateFragment"
-        android:label="ProductCreateFragment"
-        tools:layout="@layout/fragment_product_create">
-
-        <action
-            android:id="@+id/action_product_create_to_home"
-            app:destination="@id/homeFragment" />
-
-    </fragment>
-
     <!-- SHOPPING -->
     <fragment
         android:id="@+id/ShoppingFragment"
@@ -82,10 +55,6 @@
         android:name="fr.alemanflorian.shoppinglist.presentation.listes.fragment.ListesFragment"
         android:label="ListesFragment"
         tools:layout="@layout/fragment_listes">
-
-        <action
-            android:id="@+id/action_listes_to_product"
-            app:destination="@id/productFragment" />
 
         <action
             android:id="@+id/action_listes_to_shopping"

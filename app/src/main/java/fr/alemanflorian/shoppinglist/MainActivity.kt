@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
@@ -19,27 +18,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         header = Header(findViewById<FrameLayout>(R.id.header))
-
-        val backgroundOne = findViewById<ImageView>(R.id.background_one)
-        val backgroundTwo = findViewById<ImageView>(R.id.background_two)
-
-        /*val animator = ValueAnimator.ofFloat(0.0f, 1.0f)
-        animator.repeatCount = ValueAnimator.INFINITE
-        animator.interpolator = LinearInterpolator()
-        animator.duration = 10000L
-        animator.addUpdateListener { animation ->
-            val progress = animation.animatedValue as Float
-            val width = backgroundOne.width
-            val translationX = width * progress
-            backgroundOne.setTranslationX(translationX)
-            backgroundTwo.setTranslationX(translationX - width)
-        }
-        animator.start()*/
+        header.backButton.setOnClickListener { onBackPressed() }
     }
 }
 
 class Header(val view: View){
     val container = view.findViewById<ViewGroup>(R.id.header_container)
+    val backButton = view.findViewById<View>(R.id.HeaderBtnBack)
     var initialHeight:Float = 60.toPx
 
     fun reset(){

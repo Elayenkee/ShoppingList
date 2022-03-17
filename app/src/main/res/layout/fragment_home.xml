@@ -52,7 +52,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".5" />
 
-        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+        <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton
             android:id="@+id/homeBtnToShopping"
             app:layout_constraintDimensionRatio="1:1"
             android:layout_width="0dp"
@@ -67,7 +67,7 @@
             app:text="Partir faire les courses"
             android:padding="10dp"/>
 
-        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+        <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton
             android:id="@+id/homeBtnAllProducts"
             android:visibility="gone"
             android:layout_width="0dp"
@@ -83,7 +83,7 @@
             app:text="Tous les produits"
             android:padding="10dp"/>
 
-        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+        <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton
             android:id="@+id/homeBtnToListes"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -98,7 +98,7 @@
             app:text="Mes listes"
             android:padding="10dp"/>
 
-        <fr.alemanflorian.shoppinglist.presentation.home.fragment.HomeFragmentButton
+        <fr.alemanflorian.shoppinglist.presentation.home.components.HomeFragmentButton
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clipToPadding="false"

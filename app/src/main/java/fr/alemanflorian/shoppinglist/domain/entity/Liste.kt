@@ -7,7 +7,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Keep
 @Parcelize
-data class Liste(var id: Long = 0, var name: String, val products: LinkedHashMap<Long, Pair<Int, Int>>): Parcelable{
+data class Liste(var id: Long, var name: String, val products: LinkedHashMap<Long, Pair<Int, Int>>): Parcelable{
+
+    constructor(name: String):this(0, name, LinkedHashMap())
+
     fun toResponse():ListeResponse{
         val strProducts = products.map {
             "${it.key},${it.value.first},${it.value.second}"
@@ -78,7 +81,7 @@ data class Liste(var id: Long = 0, var name: String, val products: LinkedHashMap
         return true
     }
 
-    fun finish(){
+    fun reset(){
         for(p in products)
             products[p.key] = Pair(p.value.first, 0)
     }

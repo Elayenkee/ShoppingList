@@ -13,14 +13,7 @@
         android:layout_height="match_parent"
         android:alpha=".2"
         android:scaleType="fitXY"
-        android:src="@drawable/app_background"/>
-
-    <ImageView
-        android:id="@+id/background_two"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha=".2"
-        android:scaleType="fitXY"
+        android:contentDescription="main_background"
         android:src="@drawable/app_background"/>
 
     <LinearLayout
@@ -35,6 +28,19 @@
             android:background="@drawable/header_background"
             android:visibility="gone"
             android:minHeight="60dp">
+
+            <ImageView
+                android:id="@+id/HeaderBtnBack"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_round_background"
+                android:src="@drawable/button_back"
+                android:padding="7dp"
+                android:contentDescription="header_bouton_back"
+                app:tint="#fff" />
 
             <TextView
                 android:id="@+id/header_title"

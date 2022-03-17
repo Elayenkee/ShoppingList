@@ -28,12 +28,11 @@ import fr.alemanflorian.shoppinglist.presentation.common.extension.hideKeyboard
 import fr.alemanflorian.shoppinglist.presentation.common.extension.mainNavController
 import fr.alemanflorian.shoppinglist.presentation.common.extension.questionYesNo
 import fr.alemanflorian.shoppinglist.presentation.common.extension.toPx
+import fr.alemanflorian.shoppinglist.presentation.listes.adapter.ChangeListeAdapter
+import fr.alemanflorian.shoppinglist.presentation.listes.adapter.ProductAllAdapter
+import fr.alemanflorian.shoppinglist.presentation.listes.adapter.ProductFilteredAdapter
+import fr.alemanflorian.shoppinglist.presentation.listes.adapter.ProductListeAdapter
 import fr.alemanflorian.shoppinglist.presentation.listes.viewmodel.ListesViewModel
-import fr.alemanflorian.shoppinglist.presentation.product.adapter.ChangeListeAdapter
-import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductAllAdapter
-import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductFilteredAdapter
-import fr.alemanflorian.shoppinglist.presentation.product.adapter.ProductListeAdapter
-import fr.alemanflorian.shoppinglist.presentation.product.viewmodel.ProductViewModel
 import kotlinx.android.synthetic.main.fragment_listes.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -43,7 +42,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ListesFragment : CustomFragment()
 {
-    private val productViewModel : ProductViewModel by viewModel()
     private val listesViewModel : ListesViewModel by viewModel()
 
     private var allProducts = ArrayList<ProductFromListe>()
@@ -51,22 +49,14 @@ class ListesFragment : CustomFragment()
     private var popupChangeListe: ChangeListe? = null
 
     private val adapterAll = ProductAllAdapter(object : ProductAllAdapter.Interactor {
-        override fun onProductClicked(product: ProductFromListe) {
-            mainNavController().navigate(
-                    ListesFragmentDirections.actionListesToProduct(
-                            product.product
-                    )
-            )
-        }
-
         override fun onProductAddToCurrentList(product: ProductFromListe) {
-            listesViewModel.addProductToCurrentListe(product)
+            listesViewModel.incrementeProductToCurrentListe(product)
         }
     })
 
     private val adapterFiltered = ProductFilteredAdapter(object :ProductFilteredAdapter.Interactor {
         override fun onProductClicked(product: ProductFromListe) {
-            listesViewModel.addProductToCurrentListe(product)
+            listesViewModel.incrementeProductToCurrentListe(product)
             containerFiltre.visibility = View.GONE
             txtSearchProduct.hideKeyboard()
             txtSearchProduct.setText("")
@@ -97,7 +87,7 @@ class ListesFragment : CustomFragment()
     }
 
     private fun initViewObserver() {
-        productViewModel.saveNewProductResult.observe(viewLifecycleOwner){
+        listesViewModel.saveNewProductResult.observe(viewLifecycleOwner){
             if(it is Resource.Success)
             {
                 containerFiltre.visibility = View.GONE
@@ -107,7 +97,7 @@ class ListesFragment : CustomFragment()
             }
         }
 
-        productViewModel.getAllProductsWithCurrentNbResult.observe(viewLifecycleOwner) {
+        listesViewModel.getAllProductsWithCurrentNbResult.observe(viewLifecycleOwner) {
             if (it is Resource.Success)
             {
                 adapterAll.setData(it.data)
@@ -116,7 +106,7 @@ class ListesFragment : CustomFragment()
             }
         }
 
-        listesViewModel.addProductResult.observe(viewLifecycleOwner){
+        listesViewModel.incrementeProductResult.observe(viewLifecycleOwner){
             if(it is Resource.Success)
                 refresh()
         }
@@ -144,7 +134,7 @@ class ListesFragment : CustomFragment()
                 refresh()
         }
 
-        listesViewModel.saveCurrentListeResult.observe(viewLifecycleOwner){
+        listesViewModel.setCurrentListeResult.observe(viewLifecycleOwner){
             if(it is Resource.Success)
                 refresh()
         }
@@ -234,14 +224,14 @@ class ListesFragment : CustomFragment()
                 val product = productExists(name)
                 if(product != null)
                 {
-                    listesViewModel.addProductToCurrentListe(ProductFromListe(product))
+                    listesViewModel.incrementeProductToCurrentListe(ProductFromListe(product))
                     containerFiltre.visibility = View.GONE
                     txtSearchProduct.hideKeyboard()
                     txtSearchProduct.setText("")
                 }
                 else
                 {
-                    questionYesNo("Voulez-vous ajouter '$name' dans l'application ?", {productViewModel.saveNewProduct(Product(name))}, {})
+                    questionYesNo("Voulez-vous ajouter '$name' dans l'application ?", {listesViewModel.saveNewProduct(Product(name))}, {})
                 }
             }
             false
@@ -268,7 +258,7 @@ class ListesFragment : CustomFragment()
 
     private fun refresh()
     {
-        productViewModel.getAllProductsWithCurrentNb()
+        listesViewModel.getAllProductsWithCurrentNb()
         listesViewModel.getCurrentListe()
     }
 
@@ -302,13 +292,16 @@ class ListesFragment : CustomFragment()
         }
     }
 
+    /**
+     * Popup pour changer de liste
+     */
     class ChangeListe(val listesViewModel : ListesViewModel, val viewLifecycleOwner: LifecycleOwner){
         private lateinit var context: Context
         private lateinit var dialog: Dialog
         private val adapterListe = ChangeListeAdapter(object : ChangeListeAdapter.Interactor{
             override fun onClicked(liste: Liste)
             {
-                listesViewModel.saveCurrentListe(liste)
+                listesViewModel.setCurrentListe(liste)
                 dialog.dismiss()
             }
 
@@ -350,7 +343,7 @@ class ListesFragment : CustomFragment()
             val createNewListe = {
                 if(txtListe.text.toString().length > 0)
                 {
-                    val newListe = Liste(0, txtListe.text.toString(), LinkedHashMap())
+                    val newListe = Liste(txtListe.text.toString())
                     listesViewModel.saveNewListe(newListe)
                     txtListe.text = ""
                 }
@@ -379,12 +372,15 @@ class ListesFragment : CustomFragment()
         {
             override fun onMeasure(widthSpec: Int, heightSpec: Int)
             {
-                var height = MeasureSpec.makeMeasureSpec(500, MeasureSpec.AT_MOST)
+                val height = MeasureSpec.makeMeasureSpec(500, MeasureSpec.AT_MOST)
                 super.onMeasure(widthSpec, height)
             }
         }
     }
 
+    /**
+     * Popup pour changer le nombre du produit
+     */
     class DetailsProduct(val listesViewModel: ListesViewModel, val viewLifecycleOwner: LifecycleOwner, val product:ProductFromListe){
         private lateinit var context: Context
         private lateinit var dialog: Dialog
@@ -402,14 +398,14 @@ class ListesFragment : CustomFragment()
                 listesViewModel.decrementeProductToCurrentListe(product)
             }
             dialog.findViewById<View>(R.id.popupDetailsItemPlus).setOnClickListener {
-                listesViewModel.addProductToCurrentListe(product)
+                listesViewModel.incrementeProductToCurrentListe(product)
             }
 
             dialog.setOnDismissListener {
                 listesViewModel.getCurrentListe()
             }
 
-            listesViewModel.addProductResult.observe(viewLifecycleOwner){
+            listesViewModel.incrementeProductResult.observe(viewLifecycleOwner){
                 update()
             }
             listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
@@ -419,12 +415,12 @@ class ListesFragment : CustomFragment()
 
         private fun update(){
             dialog.findViewById<TextView>(R.id.popupDetailsProductTxtName).text = "${product.product.name} x ${product.nb}"
-
+            val minus = dialog.findViewById<View>(R.id.popupDetailsItemMinus)
             if(product.nb <= 0)
-                dialog.findViewById<View>(R.id.popupDetailsItemMinus).alpha = .5f
+                minus.alpha = .5f
             else
-                dialog.findViewById<View>(R.id.popupDetailsItemMinus).alpha = 1f
-            dialog.findViewById<View>(R.id.popupDetailsItemMinus).isEnabled = product.nb > 0
+                minus.alpha = 1f
+            minus.isEnabled = product.nb > 0
         }
     }
 }

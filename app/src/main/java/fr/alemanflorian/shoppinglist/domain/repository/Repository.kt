@@ -5,7 +5,7 @@ import fr.alemanflorian.shoppinglist.domain.entity.Product
 
 interface Repository
 {
-    fun onStart()
+    fun onStartApp()
 
     fun setCachedProduct(product:Product)
     fun getCachedProduct(id:Long):Product?
