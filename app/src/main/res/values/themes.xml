@@ -4,6 +4,14 @@
     </style>
 
     <style name="Theme.ShoppingListGreen" parent="Theme.ShoppingList">
-        <item name="android:statusBarColor" tools:targetApi="l">@color/green_main</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/main</item>
+    </style>
+
+    <style name="ProduitDialog" parent="Theme.ShoppingList">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">#ffff</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
     </style>
 </resources>

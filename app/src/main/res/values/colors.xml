@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- GREEN
     <color name="green_main">#f816a463</color>
     <color name="green_second">#FF018786</color>
+    -->
 
+    <!-- YELLOW
     <color name="main">#f5ab2c</color>
     <color name="second">#fac430</color>
+    -->
+
+    <!-- SOFT GREEN -->
+    <color name="second">#a2c569</color>
+    <color name="main">#d0dda8</color>
+    <color name="third">#dce8bd</color>
 </resources>

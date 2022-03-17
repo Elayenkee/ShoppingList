@@ -8,23 +8,23 @@
     app:cardCornerRadius="20dp"
     app:cardElevation="2dp">
     
-    <LinearLayout
+    <FrameLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:padding="30dp"
-        android:orientation="vertical">
+        android:padding="30dp">
 
         <TextView
             android:id="@+id/popupDetailsProductTxtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:textColor="#000"/>
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:textColor="@color/second"/>
 
         <LinearLayout
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal">
@@ -32,45 +32,52 @@
             <FrameLayout
                 android:id="@+id/popupDetailsItemMinus"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_weight="1">
 
                 <ImageView
                     android:layout_gravity="center"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
                     android:src="@drawable/minus"
-                    android:background="@drawable/button_round_background"
+                    android:background="@drawable/button_round_background_simple"
                     android:contentDescription="@string/popup_details_produit_bouton_moins"
-                    app:tint="#fff"/>
+                    app:tint="@color/second"/>
 
             </FrameLayout>
+
+            <TextView
+                android:id="@+id/popupDetailsProductTxtNb"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textColor="@color/second"/>
 
             <FrameLayout
                 android:id="@+id/popupDetailsItemPlus"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_weight="1">
 
                 <ImageView
                     android:layout_gravity="center"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:adjustViewBounds="false"
                     android:padding="10dp"
                     android:src="@drawable/plus"
-                    android:background="@drawable/button_round_background"
+                    android:background="@drawable/button_round_background_simple"
                     android:contentDescription="@string/popup_details_produit_bouton_plus"
-                    app:tint="#fff"/>
+                    app:tint="@color/second"/>
 
             </FrameLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.cardview.widget.CardView>

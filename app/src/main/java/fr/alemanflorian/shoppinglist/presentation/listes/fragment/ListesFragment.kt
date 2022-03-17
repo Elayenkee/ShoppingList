@@ -69,7 +69,7 @@ class ListesFragment : CustomFragment()
         }
 
         override fun onItemClick(product: ProductFromListe) {
-            DetailsProduct(listesViewModel, viewLifecycleOwner, product).show(requireContext())
+            openDetailsProduit(listesViewModel, product)
         }
     })
 
@@ -375,52 +375,6 @@ class ListesFragment : CustomFragment()
                 val height = MeasureSpec.makeMeasureSpec(500, MeasureSpec.AT_MOST)
                 super.onMeasure(widthSpec, height)
             }
-        }
-    }
-
-    /**
-     * Popup pour changer le nombre du produit
-     */
-    class DetailsProduct(val listesViewModel: ListesViewModel, val viewLifecycleOwner: LifecycleOwner, val product:ProductFromListe){
-        private lateinit var context: Context
-        private lateinit var dialog: Dialog
-
-        fun show(context: Context) {
-            this.context = context
-            dialog = Dialog(context)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(R.layout.popup_details_item)
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
-
-            update()
-            dialog.findViewById<View>(R.id.popupDetailsItemMinus).setOnClickListener {
-                listesViewModel.decrementeProductToCurrentListe(product)
-            }
-            dialog.findViewById<View>(R.id.popupDetailsItemPlus).setOnClickListener {
-                listesViewModel.incrementeProductToCurrentListe(product)
-            }
-
-            dialog.setOnDismissListener {
-                listesViewModel.getCurrentListe()
-            }
-
-            listesViewModel.incrementeProductResult.observe(viewLifecycleOwner){
-                update()
-            }
-            listesViewModel.decrementeProductResult.observe(viewLifecycleOwner){
-                update()
-            }
-        }
-
-        private fun update(){
-            dialog.findViewById<TextView>(R.id.popupDetailsProductTxtName).text = "${product.product.name} x ${product.nb}"
-            val minus = dialog.findViewById<View>(R.id.popupDetailsItemMinus)
-            if(product.nb <= 0)
-                minus.alpha = .5f
-            else
-                minus.alpha = 1f
-            minus.isEnabled = product.nb > 0
         }
     }
 }
